@@ -95,16 +95,16 @@ export const DATA = {
         "Served as the head of a division in the student council (OSIS), responsible for planning, organizing, and managing school events. Led a small team to execute activities such as student gatherings, competitions, and social programs. Improved leadership, communication, and event-planning skills while maintaining coordination with teachers and fellow committee members.",
     },
     {
-      company: "Nvidia",
-      href: "https://nvidia.com/",
+      company: "Raimuna  Cabang Kabupaten Bogor 2024",
+      href: "https://drive.google.com/drive/folders/10szjPO7SXBlJjICl2yWT1l4bGR_5RG0j?usp=drive_link",
       badges: [],
-      location: "Santa Clara, CA",
-      title: "Software Engineer",
-      logoUrl: "/nvidia.png",
-      start: "January 2020",
-      end: "April 2020",
+      location: "Bogor, Indonesia",
+      title: "Participant",
+      logoUrl: "/RAICAB.png",
+      start: "December 2024",
+      end: "December 2024",
       description:
-        "Architected and wrote the entire MVP of the GeForce Now Cloud Gaming internal admin and A/B testing dashboard using React, Redux, TypeScript, and Python.",
+        "Participated in Raimuna Cabang Kabupaten Bogor 2024, a regional scouting event focused on leadership, teamwork, and outdoor skills. Engaged in various activities such as pioneering, problem-solving challenges, community projects, and group coordination tasks. Gained valuable experience in discipline, communication, and collaborative decision-making while representing the school at a district-level scouting program.",
     },
     {
       company: "Splunk",
@@ -143,6 +143,58 @@ export const DATA = {
         "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
     },
   ],
+  gallery: [
+  {
+    title: "Pramuka – Raimuna Cabang 2024",
+    image: "/raimuna.JPG",
+    description: "Lagi jadi peserta Raimuna Bogor, kegiatan bareng temen se-kabupaten.",
+    date: "2024",
+  },
+  {
+    title: "Event OSIS – Bazaar Sekolah",
+    image: "/bsi.jpg",
+    description:
+      "Dokumentasi pas acara OSIS, bagian nge-handle stand dan ngurusin lomba.",
+    date: "2023",
+  },
+  {
+    title: "Outing – Hangout setelah LDKS",
+    image: "/outing.jpg",
+    description: "Main bareng anak-anak kelas setelah pulang sekolah.",
+    date: "2022",
+  },
+  {
+    title: "BITFOS Wilayah 12 – Bagi-bagi Takjil",
+    image: "/bitfos.jpg",
+    description: "Foto jadul waktu masih kecil banget.",
+    date: "2025",
+  },
+  {
+    title: "Upacara – Paskibra",
+    image: "/gallery/upacara.jpg",
+    description: "Lagi bertugas sebagai petugas upacara sekolah.",
+    date: "2023",
+  },
+  {
+    title: "Kelulusan MTs – Foto Terakhir di MTs",
+    image: "/lulus.jpg",
+    description:
+      "Perkemahan bareng temen sekelas dan pembina, bikin api unggun malem-malem.",
+    date: "2023",
+  },
+  {
+    title: "Lomba IT – SMK Tingkat Kabupaten",
+    image: "/gallery/lomba-it.jpg",
+    description: "Dokumentasi waktu ikut lomba IT Networking.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/gallery/temen.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+],
   education: [
     {
       school: "SMPN 5 Ciamis",
