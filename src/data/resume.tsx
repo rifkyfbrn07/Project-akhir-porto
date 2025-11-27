@@ -146,20 +146,20 @@ export const DATA = {
   gallery: [
   {
     title: "Pramuka – Raimuna Cabang 2024",
-    image: "/raimuna.JPG",
+    image: "/seminar.JPG",
     description: "Lagi jadi peserta Raimuna Bogor, kegiatan bareng temen se-kabupaten.",
     date: "2024",
   },
   {
     title: "Event OSIS – Bazaar Sekolah",
-    image: "/bsi.jpg",
+    image: "/outing.jpg",
     description:
       "Dokumentasi pas acara OSIS, bagian nge-handle stand dan ngurusin lomba.",
     date: "2023",
   },
   {
     title: "Outing – Hangout setelah LDKS",
-    image: "/outing.jpg",
+    image: "/raimuna.jpg",
     description: "Main bareng anak-anak kelas setelah pulang sekolah.",
     date: "2022",
   },
@@ -171,26 +171,74 @@ export const DATA = {
   },
   {
     title: "Upacara – Paskibra",
-    image: "/gallery/upacara.jpg",
+    image: "/bsi.jpg",
     description: "Lagi bertugas sebagai petugas upacara sekolah.",
     date: "2023",
   },
   {
     title: "Kelulusan MTs – Foto Terakhir di MTs",
-    image: "/lulus.jpg",
+    image: "/bsi2.jpg",
     description:
       "Perkemahan bareng temen sekelas dan pembina, bikin api unggun malem-malem.",
     date: "2023",
   },
   {
     title: "Lomba IT – SMK Tingkat Kabupaten",
-    image: "/gallery/lomba-it.jpg",
+    image: "/BD.jpg",
     description: "Dokumentasi waktu ikut lomba IT Networking.",
     date: "2024",
   },
   {
     title: "Photo with Friends",
-    image: "/gallery/temen.jpg",
+    image: "/seni.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/komjar.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/seminar.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
+    description: "Foto rame-rame waktu ada acara sekolah.",
+    date: "2024",
+  },
+  {
+    title: "Photo with Friends",
+    image: "/hg.jpg",
     description: "Foto rame-rame waktu ada acara sekolah.",
     date: "2024",
   },
@@ -228,7 +276,7 @@ export const DATA = {
       dates: "Nov 2025",
       active: true,
       description:
-        "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
+        "My personal website where I showcase my projects, skills, and the progress I&apos;ve made as a developer. I designed it to feel clean, modern, and actually represent who I am—both in code and creativity. This project also became my playground for trying out animations, layouts, and better component structure as I keep improving.",
       technologies: [
         "Next.js",
         "Typescript",
@@ -248,11 +296,11 @@ export const DATA = {
     },
     {
       title: "Web-esport",
-      href: "https://github.com/iamzizi16/Web-esporthttps://magicui.design",
+      href: "https://github.com/iamzizi16/Web-esport",
       dates: "August 2024",
       active: true,
       description:
-        "Designed, developed and sold animated UI components for developers.",
+        "A fun, esports-inspired interface I built to strengthen my fundamentals in layouting and responsive design. The project has a fast, energetic vibe, and it allowed me to explore UI patterns that feel modern and competitive. It&apos;s one of those projects I made just to experiment—and ended up liking the result.",
       technologies: [
         "HTML",
         "CSS",
@@ -276,7 +324,7 @@ export const DATA = {
       dates: "September 2025",
       active: true,
       description:
-        "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
+        "A simple e-commerce prototype where I focused on building clean product displays, reusable components, and a more structured front-end architecture. This project helped me understand how real-world interfaces are organized and how to keep everything readable and scalable.",
       technologies: [
         "Next.js",
         "Typescript",
@@ -298,7 +346,7 @@ export const DATA = {
       dates: "August 2025",
       active: true,
       description:
-        "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
+        "A lightweight weather application that shows real-time data through a minimal, easy-to-digest UI. It was a great chance to practice API integration, async data handling, and designing a layout that feels calm and readable.",
       technologies: [
         "Next.js",
         "Typescript",

@@ -6,6 +6,8 @@ import BlurFade from "@/components/magicui/blur-fade";
 import GooeyNav from "@/components/ui/GooeyNav";
 import SplashCursor from "@/components/SplashCursor";
 import { DATA } from "@/data/resume";
+import CircularGallery from "@/components/CircularGallery";
+
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -46,7 +48,9 @@ export default function GalleryPage() {
         timeVariance={300}
         colors={[1, 2, 3, 1, 2, 3, 1, 4]}
       />
-
+      
+      
+      
       <section id="gallery">
         <div className="space-y-12 w-full py-12 px-6">
 
@@ -66,6 +70,12 @@ export default function GalleryPage() {
               </p>
             </div>
           </BlurFade>
+      
+      
+
+        <div style={{ height: '300px', position: 'relative' }}>
+            <CircularGallery bend={3} textColor="#ffffff" borderRadius={0.05} scrollEase={0.02}/>
+        </div>
 
           {/* GALLERY GRID */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-6xl mx-auto">

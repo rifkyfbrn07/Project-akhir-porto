@@ -63,7 +63,7 @@ export default function Page() {
     Welcome to my portfolio
   </span>
 
-  Hi, I’m{" "}
+  Hi, I&apos;m{" "}
   <span className="font-black text-gray-900 dark:text-white">
     {DATA.name.split(" ")[0]}
   </span>
