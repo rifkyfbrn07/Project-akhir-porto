@@ -480,52 +480,28 @@ class App {
     const defaultItems = [
       {
         image: "/mtsera.jpg",
-        text: 'Hari Kelulusan'
-      },
-      {
-        image: "/rifky.jpg",
-        text: 'Blazer Baru'
+        text: 'Graduation Day'
       },
       {
         image: "/gw.jpeg",
-        text: 'Sunrice'
+        text: 'Harmony at Sunrise'
       },
       {
         image: "/hg.jpg",
-        text: 'Strawberries'
+        text: 'Teacher day'
       },
       {
-        image: `https://picsum.photos/seed/5/800/600?grayscale`,
-        text: 'Deep Diving'
+        image: `/sumbing.jpg`,
+        text: 'Mount Sumbing Expedition'
       },
       {
-        image: `https://picsum.photos/seed/16/800/600?grayscale`,
-        text: 'Train Track'
+        image: `/sumbing2.jpg`,
+        text: 'Mount Sumbing Expedition'
       },
       {
-        image: `https://picsum.photos/seed/17/800/600?grayscale`,
-        text: 'Santorini'
+        image: `/sindoro.jpg`,
+        text: 'Mount Sindoro Expedition'
       },
-      {
-        image: `https://picsum.photos/seed/8/800/600?grayscale`,
-        text: 'Blurry Lights'
-      },
-      {
-        image: `https://picsum.photos/seed/9/800/600?grayscale`,
-        text: 'New York'
-      },
-      {
-        image: `https://picsum.photos/seed/10/800/600?grayscale`,
-        text: 'Good Boy'
-      },
-      {
-        image: `https://picsum.photos/seed/21/800/600?grayscale`,
-        text: 'Coastline'
-      },
-      {
-        image: `https://picsum.photos/seed/12/800/600?grayscale`,
-        text: 'Palm Trees'
-      }
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     this.mediasImages = galleryItems.concat(galleryItems);

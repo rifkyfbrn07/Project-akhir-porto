@@ -8,7 +8,6 @@ import SplashCursor from "@/components/SplashCursor";
 import { DATA } from "@/data/resume";
 import CircularGallery from "@/components/CircularGallery";
 
-
 const BLUR_FADE_DELAY = 0.04;
 
 const items = [
@@ -17,27 +16,32 @@ const items = [
   { label: "Project", href: "/project" },
 ];
 
-// ==============================
-// TYPE FIX ↓ ↓ ↓
-// ==============================
 type GalleryItem = {
   image: string;
   title: string;
   date: string;
   description: string;
+  category: string;
 };
-// ==============================
 
 export default function GalleryPage() {
-  // FIX: beri tipe agar tidak infer jadi 'never'
   const [active, setActive] = useState<GalleryItem | null>(null);
 
   const gallery: readonly GalleryItem[] = DATA.gallery;
 
+  const groupedGallery = gallery.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+
+    acc[item.category].push(item);
+    return acc;
+  }, {} as Record<string, GalleryItem[]>);
 
   return (
     <>
       <SplashCursor />
+
       <GooeyNav
         items={items}
         particleCount={15}
@@ -46,94 +50,189 @@ export default function GalleryPage() {
         initialActiveIndex={1}
         animationTime={600}
         timeVariance={300}
-        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        colors={[1,2,3,1,2,3,1,4]}
       />
-      
-      
-      
-      <section id="gallery">
-        <div className="space-y-12 w-full py-12 px-6">
 
-          {/* TITLE SECTION */}
+      <section id="gallery">
+        <div className="space-y-20 w-full py-12 px-6">
+
+          {/* HERO */}
           <BlurFade delay={BLUR_FADE_DELAY * 8}>
-            <div className="flex flex-col items-center justify-center text-center space-y-4">
-              <div className="inline-block px-3 py-1 text-sm rounded-lg bg-black text-white dark:bg-white dark:text-black">
-                My Gallery
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="px-4 py-1 text-sm rounded-xl bg-black text-white dark:bg-white dark:text-black">
+                Experience Gallery
               </div>
 
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                A Collection of Memories
+              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight">
+                Documenting My Journey
               </h2>
 
-              <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed max-w-2xl">
-                Memories, event documentation, and meaningful moments I&apos;ve experienced.
+              <p className="text-muted-foreground max-w-2xl md:text-xl">
+                Memories, achievements, and meaningful experiences I've documented along the way.
               </p>
             </div>
           </BlurFade>
-      
-      
 
-        <div style={{ height: '300px', position: 'relative' }}>
-            <CircularGallery bend={3} textColor="#ffffff" borderRadius={0.05} scrollEase={0.02}/>
-        </div>
-
-          {/* GALLERY GRID */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
-            {gallery.map((item, i) => (
-              <BlurFade key={i} delay={BLUR_FADE_DELAY * 10 + i * 0.05}>
-                <div
-                  className="relative cursor-pointer group"
-                  onClick={() => setActive(item)}
-                >
-                  <Image
-                    src={item.image}
-                    width={800}
-                    height={800}
-                    alt={item.title}
-                    className="rounded-xl object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center text-sm">
-                    Click to view
-                  </div>
-                </div>
-              </BlurFade>
-            ))}
+          {/* TOP CIRCULAR */}
+          <div className="relative h-[330px]">
+            <CircularGallery
+              bend={3}
+              textColor="#ffffff"
+              borderRadius={0.08}
+              scrollEase={0.02}
+            />
           </div>
+
+
+          {/* GROUPED GALLERY */}
+          {Object.entries(groupedGallery).map(([section, items]) => (
+            <section
+              key={section}
+              className="max-w-7xl mx-auto space-y-8"
+            >
+
+              {/* CATEGORY TITLE */}
+              <div className="flex items-center gap-5">
+                <h2 className="text-4xl font-bold whitespace-nowrap">
+                  {section}
+                </h2>
+
+                <div className="h-px flex-1 bg-white/20"/>
+              </div>
+
+
+              {/* FIXED UNIFORM GRID */}
+              <div className="
+                grid
+                grid-cols-2
+                sm:grid-cols-3
+                md:grid-cols-4
+                gap-6
+              ">
+                {items.map((item, i) => (
+                  <BlurFade
+                    key={i}
+                    delay={BLUR_FADE_DELAY * 10 + i * .05}
+                  >
+                    <div
+                      onClick={() => setActive(item)}
+                      className="group cursor-pointer"
+                    >
+                      <div className="
+                        relative
+                        w-full
+                        aspect-[4/3]
+                        rounded-2xl
+                        overflow-hidden
+                        shadow-xl
+                      ">
+
+                        <Image
+                          src={item.image}
+                          fill
+                          alt={item.title}
+                          className="
+                            object-cover
+                            transition-all
+                            duration-500
+                            group-hover:scale-110
+                            group-hover:brightness-75
+                          "
+                        />
+
+                        <div className="
+                          absolute inset-0
+                          opacity-0
+                          group-hover:opacity-100
+                          transition
+                          bg-black/30
+                          flex items-center justify-center
+                          font-medium
+                        ">
+                          View
+                        </div>
+
+                      </div>
+                    </div>
+                  </BlurFade>
+                ))}
+              </div>
+
+            </section>
+          ))}
+
         </div>
       </section>
+
+
 
       {/* MODAL */}
       {active && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm z-50"
           onClick={() => setActive(null)}
+          className="
+            fixed inset-0
+            bg-black/80
+            backdrop-blur-sm
+            flex items-center justify-center
+            p-4
+            z-50
+          "
         >
           <div
-            className="bg-neutral-900 p-4 rounded-xl max-w-lg w-full"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e)=>e.stopPropagation()}
+            className="
+              bg-neutral-900
+              rounded-2xl
+              p-5
+              max-w-xl
+              w-full
+            "
           >
             <Image
               src={active.image}
-              width={1200}
+              width={1600}
               height={1200}
               alt={active.title}
-              className="rounded-xl mb-4 transition-transform duration-300 hover:scale-105"
+              className="
+                rounded-xl
+                mb-5
+                w-full
+                object-cover
+              "
             />
 
-            <h2 className="text-2xl font-semibold">{active.title}</h2>
-            <p className="text-gray-400 text-sm mb-1">{active.date}</p>
-            <p className="text-gray-300">{active.description}</p>
+            <h2 className="text-3xl font-semibold mb-1">
+              {active.title}
+            </h2>
+
+            <p className="text-gray-400 text-sm mb-3">
+              {active.date}
+            </p>
+
+            <p className="text-gray-300 leading-relaxed">
+              {active.description}
+            </p>
 
             <button
-              className="mt-4 w-full bg-white text-black py-2 rounded-lg font-semibold"
-              onClick={() => setActive(null)}
+              onClick={()=>setActive(null)}
+              className="
+                mt-5
+                w-full
+                bg-white
+                text-black
+                py-3
+                rounded-xl
+                font-semibold
+              "
             >
               Close
             </button>
+
           </div>
         </div>
       )}
+
     </>
   );
 }
