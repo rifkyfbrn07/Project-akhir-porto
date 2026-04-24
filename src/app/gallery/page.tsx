@@ -68,7 +68,7 @@ export default function GalleryPage() {
               </h2>
 
               <p className="text-muted-foreground max-w-2xl md:text-xl">
-                Memories, achievements, and meaningful experiences I've documented along the way.
+                Memories, achievements, and meaningful experiences I&apos;ve documented along the way.
               </p>
             </div>
           </BlurFade>
