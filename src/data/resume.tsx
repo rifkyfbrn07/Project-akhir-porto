@@ -9,8 +9,13 @@ export const DATA = {
   locationLink: "https://www.google.com/maps/place/Ciamis",
   description:
     "Full-Stack Web Developer | Networking & Cyber Security Enthusiast",
-  summary:
-    "I am a student specializing in Information Systems, Networking, and Applications (SIJA) with a strong focus on backend development and system security. I have experience building full-stack web applications using Laravel and Next.js, including designing REST APIs, authentication systems, and managing relational databases with MySQL. I am also actively developing skills in networking and cyber security, working with Linux (Ubuntu) and solving basic Capture The Flag (CTF) challenges. I am passionate about building efficient, secure, and scalable systems, and continuously improving my problem-solving abilities in real-world scenarios.",
+  summary: `
+I am a student specializing in Information Systems, Networking, and Applications (SIJA) with a strong focus on backend development and system security.
+
+I build full-stack web applications using Laravel and Next.js, including REST API development, authentication systems, and database management using MySQL.
+
+I also have experience in networking and cyber security fundamentals, including Linux usage and basic Capture The Flag (CTF) challenges.
+`,
 
   avatarUrl: "/fabian.png",
   skills: [
@@ -77,7 +82,7 @@ export const DATA = {
       start: "September 2023",
       end: "November 2025",
       description:
-        "Contributed as an active member in the West Java Student Forum (FOSJABAR), helping organize regional student activities and school collaboration events. Assisted in documentation, coordination, and publication tasks during several programs and meetings. Developed teamwork, leadership, and communication skills through direct involvement in the organization.",
+        "Contributed as an active member of FOSJABAR, collaborating with students across regions to organize events and initiatives. Strengthened teamwork, communication, and project coordination skills through active involvement in regional programs.",
     },
     {
       company: "OSIS SMK Ti Bazma",
@@ -86,10 +91,22 @@ export const DATA = {
       location: "Remote",
       title: "Division Head",
       logoUrl: "/osis.png",
-      start: "Spetember 2023",
+      start: "Spetember 2024",
       end: "Februari 2025",
       description:
-        "Served as the head of a division in the student council (OSIS), responsible for planning, organizing, and managing school events. Led a small team to execute activities such as student gatherings, competitions, and social programs. Improved leadership, communication, and event-planning skills while maintaining coordination with teachers and fellow committee members.",
+        "Led a division in the student council (OSIS), responsible for planning and executing school events. Managed team coordination, delegated tasks, and ensured smooth event execution, improving leadership and organizational skills.",
+    },
+    {
+      company: "OSIS SMK Ti Bazma",
+      badges: [],
+      href: "https://smktibazma.sch.id/",
+      location: "Remote",
+      title: "Member",
+      logoUrl: "/osis.png",
+      start: "Spetember 2023",
+      end: "August 2024",
+      description:
+        "Led a division in the student council (OSIS), responsible for planning and executing school events. Managed team coordination, delegated tasks, and ensured smooth event execution, improving leadership and organizational skills.",
     },
     {
       company: "Raimuna  Cabang Kabupaten Bogor 2024",
@@ -101,7 +118,7 @@ export const DATA = {
       start: "December 2024",
       end: "December 2024",
       description:
-        "Participated in Raimuna Cabang Kabupaten Bogor 2024, a regional scouting event focused on leadership, teamwork, and outdoor skills. Engaged in various activities such as pioneering, problem-solving challenges, community projects, and group coordination tasks. Gained valuable experience in discipline, communication, and collaborative decision-making while representing the school at a district-level scouting program.",
+        "Participated in Raimuna Cabang Kabupaten Bogor 2024, where I actively engaged in team-based problem solving, coordination tasks, and leadership activities. Developed strong collaboration, communication, and decision-making skills through real-world challenges in a dynamic outdoor environment.",
     },
   ],
   gallery: [
@@ -220,22 +237,6 @@ export const DATA = {
   ],
   education: [
     {
-      school: "SMPN 5 Ciamis",
-      href: "https://id.wikipedia.org/wiki/SMP_Negeri_5_Ciamis",
-      degree: "Junior High School",
-      logoUrl: "/Logo_SMPN_5_Ciamis.png",
-      start: "2020",
-      end: "2021",
-    },
-    {
-      school: "MTsN 15 Ciamis",
-      href: "https://www.mtsn15ciamis.sch.id/",
-      degree: "Islamic Junior High School — Sports Class",
-      logoUrl: "/mts.png",
-      start: "2021",
-      end: "2023",
-    },
-    {
       school: "SMK TI BAZMA",
       href: "https://smktibazma.sch.id/",
       degree: "Software & Networking (SIJA)",
@@ -250,8 +251,22 @@ export const DATA = {
       href: "https://rifkyfbrn07-porto.vercel.app/",
       dates: "Nov 2025",
       active: true,
-      description:
-        "Developed a personal portfolio website using Next.js to showcase projects, skills, and experience with a modern and interactive UI. Implemented reusable components, dynamic gallery features, and smooth animations to enhance user experience. Focused on performance optimization and responsive design, and deployed the application using Vercel for fast and reliable access.",
+      description: `
+Personal Portfolio Website
+
+Tech Stack:
+Next.js, TypeScript, TailwindCSS, Magic UI
+
+Features:
+- Responsive and modern UI design
+- Dynamic project showcase
+- Smooth animations and interactive components
+- Optimized deployment using Vercel
+
+Highlights:
+- Built reusable component architecture
+- Focused on performance and clean UI/UX
+`,
       technologies: [
         "Next.js",
         "Typescript",
@@ -274,8 +289,21 @@ export const DATA = {
       href: "https://github.com/iamzizi16/Web-esport",
       dates: "August 2024",
       active: true,
-      description:
-        "A fun, esports-inspired interface I built to strengthen my fundamentals in layouting and responsive design. The project has a fast, energetic vibe, and it allowed me to explore UI patterns that feel modern and competitive. It&apos;s one of those projects I made just to experiment—and ended up liking the result.",
+      description: `
+Esports-Themed Web Interface
+
+Tech Stack:
+HTML, CSS, JavaScript
+
+Features:
+- Responsive layout for multiple screen sizes
+- Structured UI sections (navbar, content, footer)
+- Custom styling with CSS for gaming-themed visuals
+
+Highlights:
+- Practiced layouting and responsive design fundamentals
+- Improved understanding of DOM structure and styling
+`,
       technologies: [
         "HTML",
         "CSS",
@@ -298,8 +326,22 @@ export const DATA = {
       href: "http://github.com/iamzizi16/mini-ecom",
       dates: "September 2025",
       active: true,
-      description:
-        "A simple e-commerce prototype where I focused on building clean product displays, reusable components, and a more structured front-end architecture. This project helped me understand how real-world interfaces are organized and how to keep everything readable and scalable.",
+      description: `
+E-Commerce Web Application
+
+Tech Stack:
+Laravel, MySQL, Blade
+
+Features:
+- User authentication & role-based access
+- Product management system (CRUD)
+- Order & transaction handling
+- REST API for frontend integration
+
+Highlights:
+- Designed relational database schema
+- Implemented secure authentication flow
+`,
       technologies: [
         "Next.js",
         "Typescript",
@@ -320,8 +362,22 @@ export const DATA = {
       href: "https://github.com/iamzizi16/cuaca",
       dates: "August 2025",
       active: true,
-      description:
-        "A lightweight weather application that shows real-time data through a minimal, easy-to-digest UI. It was a great chance to practice API integration, async data handling, and designing a layout that feels calm and readable.",
+     description: `
+Weather Information App
+
+Tech Stack:
+Next.js, TypeScript, TailwindCSS
+
+Features:
+- Real-time weather data fetching from external API
+- Search functionality for different locations
+- Clean and responsive UI display
+
+Highlights:
+- Integrated third-party API for live data
+- Implemented asynchronous data fetching and state handling
+- Focused on readable and user-friendly data presentation
+`,
       technologies: [
         "Next.js",
         "Typescript",

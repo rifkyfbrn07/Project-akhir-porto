@@ -156,7 +156,7 @@ export default function GalleryPage() {
                       </div>
                       <p className="mt-2 text-sm font-medium line-clamp-1">
                       {item.title}
-                      </p>
+                       </p>
                     </div>
                   </BlurFade>
                 ))}

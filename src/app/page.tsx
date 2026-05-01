@@ -22,108 +22,118 @@ const items = [
 
 export default function Page() {
   return (
-  
-    <main className="flex flex-col min-h-[100dvh] space-y-10">
-    <div style={{
-  height: '60px',
-  position: 'relative',
-  
-  zIndex: 50,
-}}>
-<SplashCursor />
-  <GooeyNav
-    items={items}
-    particleCount={15}
-    particleDistances={[90, 10]}
-    particleR={100}
-    initialActiveIndex={0}
-    animationTime={600}
-    timeVariance={300}
-    colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-  />
-</div>
-      <section
-  id="hero"
-  className="relative w-full max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
->
-  <div className="flex-1 space-y-6 text-center md:text-left relative overflow-hidden">
-  {/* ✦ Background animasi highlight ✦ */}
-  
 
-  {/* ✦ Nama Rifky Febrian ✦ */}
-  <h1
-  className="
+    <main className="flex flex-col min-h-[100dvh] space-y-10">
+      <div style={{
+        height: '60px',
+        position: 'relative',
+
+        zIndex: 50,
+      }}>
+        <SplashCursor />
+        <GooeyNav
+          items={items}
+          particleCount={15}
+          particleDistances={[90, 10]}
+          particleR={100}
+          initialActiveIndex={0}
+          animationTime={600}
+          timeVariance={300}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
+      </div>
+      <section
+        id="hero"
+        className="relative w-full max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+      >
+        <div className="flex-1 space-y-6 text-center md:text-left relative overflow-hidden">
+          {/* ✦ Background animasi highlight ✦ */}
+
+
+          {/* ✦ Nama Rifky Febrian ✦ */}
+          <h1
+            className="
     relative z-10 
     text-5xl sm:text-6xl lg:text-7xl 
     font-extrabold tracking-tight leading-tight
     text-gray-900 dark:text-white
   "
->
-  <span className="block text-xl sm:text-2xl font-light text-gray-600 dark:text-gray-400 mb-2">
-    Welcome to my portfolio
-  </span>
+          >
+            <span className="block text-xl sm:text-2xl font-light ...">
+              Welcome to my portfolio
+            </span>
 
-  Hi, I&apos;m{" "}
-  <span className="font-black text-gray-900 dark:text-white">
-    {DATA.name.split(" ")[0]}
-  </span>
-</h1>
+            <span className="block text-base sm:text-lg font-medium text-gray-600 dark:text-gray-400 tracking-wide">
+              Backend Developer • Laravel • Cyber Security
+            </span>
 
-  {/* ✦ Deskripsi ✦ */}
-  <p className="text-muted-foreground text-lg max-w-md mx-auto md:mx-0 relative z-10">
-    {DATA.description}
-  </p>
+            Hi, I&apos;m{" "}
+            <span className="font-black text-gray-900 dark:text-white">
+              {DATA.name.split(" ")[0]}
+            </span>
 
-  {/* ✦ Tombol Aksi ✦ */}
-  <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 relative z-10">
-    <a
-      href="/cv.pdf"
-      download
-      className="px-6 py-3 rounded-full font-semibold bg-[#2563eb] text-white shadow-[0_0_15px_rgba(37,99,235,0.6)] hover:shadow-[0_0_25px_rgba(37,99,235,0.8)] hover:scale-[1.05] transition-all duration-300"
-    >
-      Download CV
-    </a>
-    <a
-      href="#projects"
-      className="px-6 py-3 rounded-full font-semibold border border-[#2563eb] text-[#2563eb] dark:text-[#93c5fd] hover:bg-[#2563eb] hover:text-white transition-all duration-300"
-    >
-      See My Work
-    </a>
-  </div>
+            <p className="text-zinc-500 dark:text-zinc-400 text-[15px] leading-relaxed max-w-md mx-auto md:mx-0 font-medium">
+              I build secure and scalable web applications using Laravel & Next.js,
+              with a strong focus on backend systems and API development.
+            </p>
 
-  {/* ✦ Animasi Gradient ✦ */}
-  
-</div>
+          </h1>
 
-   
-  
-<ProfileCard
-  name="Rifky Febrian"
-  title="Software Engineer"
-  handle="Rifky"
-  status="Online"
-  contactText="Contact Me"
-  avatarUrl="./fabian.png"
-  showUserInfo={true}
-  enableTilt={true}
-  enableMobileTilt={false}
-  onContactClick={() => window.location.href = "mailto:febrianrfiky590@gmail.com"}
-/>
+          {/* ✦ Deskripsi ✦ */}
+          <p className="text-muted-foreground text-lg max-w-md mx-auto md:mx-0 relative z-10">
+            {DATA.description}
+          </p>
 
-<RotatingText
-texts={['KREATIF', 'INOVATIF', 'KEREN', 'PROFESIONAL']}
-  mainClassName="px-4 sm:px-6 md:px-8 bg-[#6933FF] text-white font-extrabold uppercase overflow-hidden py-1 sm:py-2 md:py-2 justify-center rounded-xl shadow-[0_0_20px_rgba(105,51,255,0.6)] tracking-wide"
-  staggerFrom="last"
-  initial={{ y: "100%" }}
-  animate={{ y: 0 }}
-  exit={{ y: "-120%" }}
-  staggerDuration={0.025}
-  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-  transition={{ type: "spring", damping: 30, stiffness: 400 }}
-  rotationInterval={2000}
-/>
+          {/* ✦ Tombol Aksi ✦ */}
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 relative z-10">
+            <a
+              href="/cv.pdf"
+              download
+              className="px-6 py-3 rounded-full font-semibold bg-[#2563eb] text-white shadow-[0_0_15px_rgba(37,99,235,0.6)] hover:shadow-[0_0_25px_rgba(37,99,235,0.8)] hover:scale-[1.05] transition-all duration-300"
+            >
+              Download CV
+            </a>
+            <a
+              href="#projects"
+              className="px-6 py-3 rounded-full font-semibold border border-[#2563eb] text-[#2563eb] dark:text-[#93c5fd] hover:bg-[#2563eb] hover:text-white transition-all duration-300"
+            >
+              See My Work
+            </a>
+          </div>
 
-</section>
+          {/* ✦ Animasi Gradient ✦ */}
+
+        </div>
+
+
+
+        <ProfileCard
+          name="Rifky Febrian"
+          title="Software Engineer"
+          handle="Rifky"
+          status="Online"
+          contactText="Contact Me"
+          avatarUrl="./fabian.png"
+          showUserInfo={true}
+          enableTilt={true}
+          enableMobileTilt={false}
+          onContactClick={() => window.location.href = "mailto:febrianrfiky590@gmail.com"}
+        />
+
+        <RotatingText
+          texts={['FULLSTACK DEV', 'PROBLEM SOLVER', 'FAST LEARNER', 'TEAM PLAYER']}
+          mainClassName="px-4 sm:px-6 md:px-8 bg-[#6933FF] text-white font-extrabold uppercase overflow-hidden py-1 sm:py-2 md:py-2 justify-center rounded-xl shadow-[0_0_20px_rgba(105,51,255,0.6)] tracking-wide"
+          staggerFrom="last"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-120%" }}
+          staggerDuration={0.025}
+          splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+          transition={{ type: "spring", damping: 30, stiffness: 400 }}
+          rotationInterval={2000}
+        />
+
+      </section>
 
 
       <section id="about">
@@ -139,7 +149,9 @@ texts={['KREATIF', 'INOVATIF', 'KEREN', 'PROFESIONAL']}
       <section id="work">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Organization Experience</h2>
+            <h2 className="text-title">
+              Experience & Events
+            </h2>
           </BlurFade>
           {DATA.work.map((work, id) => (
             <BlurFade
@@ -198,6 +210,19 @@ texts={['KREATIF', 'INOVATIF', 'KEREN', 'PROFESIONAL']}
           </div>
         </div>
       </section>
+      <section id="security">
+        <div className="flex flex-col gap-y-3">
+          <h2 className="text-xl font-bold">Cyber Security & Networking</h2>
+
+          <ul className="text-muted-foreground space-y-2 text-sm">
+            <li>• Participated in WorldSkills ASEAN Cyber Security selection</li>
+            <li>• Solved basic Capture The Flag (CTF) challenges</li>
+            <li>• Experience using Linux (Ubuntu)</li>
+            <li>• Basic networking configuration and troubleshooting</li>
+          </ul>
+        </div>
+      </section>
+
       <section id="projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
@@ -249,7 +274,7 @@ texts={['KREATIF', 'INOVATIF', 'KEREN', 'PROFESIONAL']}
                 className="inline-block px-3 py-1 text-sm rounded-lg
                 bg-black text-white
                 dark:bg-white dark:text-black">
-                  My Project
+                My Project
               </div>
 
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
