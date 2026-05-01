@@ -10,21 +10,16 @@ export const DATA = {
   description:
     "Full-Stack Web Developer | Networking & Cyber Security Enthusiast",
   summary:
-    "I am a student specializing in Information Systems, Networking, and Applications (SIJA), with a strong focus on backend development and system security. I have experience building full-stack web applications using Laravel and Next.js, including designing REST APIs, authentication systems, and database management using MySQL. I also have a foundation in networking and cyber security, including Linux (Ubuntu) and basic Capture The Flag (CTF) challenges. I am passionate about building efficient, secure, and scalable systems.",
+    "I am a student specializing in Information Systems, Networking, and Applications (SIJA) with a strong focus on backend development and system security. I have experience building full-stack web applications using Laravel and Next.js, including designing REST APIs, authentication systems, and managing relational databases with MySQL. I am also actively developing skills in networking and cyber security, working with Linux (Ubuntu) and solving basic Capture The Flag (CTF) challenges. I am passionate about building efficient, secure, and scalable systems, and continuously improving my problem-solving abilities in real-world scenarios.",
 
   avatarUrl: "/fabian.png",
   skills: [
-    "Laravel",
-    "REST API",
-    "Next.js",
-    "TypeScript",
-    "TailwindCSS",
-    "MySQL",
-    "Linux (Ubuntu)",
-    "Cyber Security Basics",
-    "Networking",
-    "Git & GitHub",
-    "Postman",
+    "Backend: Laravel (PHP), REST API",
+    "Frontend: Next.js, TypeScript, TailwindCSS",
+    "Database: MySQL",
+    "Networking: Basic Networking",
+    "Cyber Security: CTF (Basic), Security Fundamentals",
+    "Tools: Git, GitHub, Postman, Linux (Ubuntu)"
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
@@ -256,7 +251,7 @@ export const DATA = {
       dates: "Nov 2025",
       active: true,
       description:
-         "Built a personal portfolio website using Next.js to showcase my projects, skills, and experience. The website features a modern UI, smooth animations, and interactive components including a dynamic gallery and 3D elements. Optimized for performance and deployed using Vercel.",
+        "Developed a personal portfolio website using Next.js to showcase projects, skills, and experience with a modern and interactive UI. Implemented reusable components, dynamic gallery features, and smooth animations to enhance user experience. Focused on performance optimization and responsive design, and deployed the application using Vercel for fast and reliable access.",
       technologies: [
         "Next.js",
         "Typescript",

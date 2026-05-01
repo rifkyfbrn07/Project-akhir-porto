@@ -50,11 +50,11 @@ export default function GalleryPage() {
         initialActiveIndex={1}
         animationTime={600}
         timeVariance={300}
-        colors={[1,2,3,1,2,3,1,4]}
+        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
       />
 
       <section id="gallery">
-        <div className="space-y-20 w-full py-12 px-6">
+        <div className="space-y-20 w-full py-16 px-4 sm:px-6 lg:px-8">
 
           {/* HERO */}
           <BlurFade delay={BLUR_FADE_DELAY * 8}>
@@ -97,16 +97,17 @@ export default function GalleryPage() {
                   {section}
                 </h2>
 
-                <div className="h-px flex-1 bg-white/20"/>
+                <div className="h-px flex-1 bg-white/20" />
               </div>
 
 
               {/* FIXED UNIFORM GRID */}
               <div className="
                 grid
-                grid-cols-2
-                sm:grid-cols-3
-                md:grid-cols-4
+                grid-cols-1
+                sm:grid-cols-2
+                md:grid-cols-3
+                lg:grid-cols-4
                 gap-6
               ">
                 {items.map((item, i) => (
@@ -121,7 +122,7 @@ export default function GalleryPage() {
                       <div className="
                         relative
                         w-full
-                        aspect-[4/3]
+                        aspect-square
                         rounded-2xl
                         overflow-hidden
                         shadow-xl
@@ -153,6 +154,9 @@ export default function GalleryPage() {
                         </div>
 
                       </div>
+                      <p className="mt-2 text-sm font-medium line-clamp-1">
+                      {item.title}
+                      </p>
                     </div>
                   </BlurFade>
                 ))}
@@ -180,7 +184,7 @@ export default function GalleryPage() {
           "
         >
           <div
-            onClick={(e)=>e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             className="
               bg-neutral-900
               rounded-2xl
@@ -215,7 +219,7 @@ export default function GalleryPage() {
             </p>
 
             <button
-              onClick={()=>setActive(null)}
+              onClick={() => setActive(null)}
               className="
                 mt-5
                 w-full
