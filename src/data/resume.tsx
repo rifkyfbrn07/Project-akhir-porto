@@ -8,21 +8,23 @@ export const DATA = {
   location: "Ciamis",
   locationLink: "https://www.google.com/maps/place/Ciamis",
   description:
-    "Information & Network Systems Student with a focus on Web Development and System Administration. build practical digital projects and enjoy learning new technologies..",
+    "Full-Stack Web Developer | Networking & Cyber Security Enthusiast",
   summary:
-    "Hey! I’m Rifky, a student in SIJA (Information Systems, Networks, and Applications). Honestly, I’m not that into coding — I prefer planting and taking care of plants. It’s just more relaxing and fun for me. I also like joining organizations, meeting new people, and working on cool stuff together. Oh, and I can speak a bit of Japanese, just the basic stuff though 😅.",
-  
+    "I am a student specializing in Information Systems, Networking, and Applications (SIJA), with a strong focus on backend development and system security. I have experience building full-stack web applications using Laravel and Next.js, including designing REST APIs, authentication systems, and database management using MySQL. I also have a foundation in networking and cyber security, including Linux (Ubuntu) and basic Capture The Flag (CTF) challenges. I am passionate about building efficient, secure, and scalable systems.",
+
   avatarUrl: "/fabian.png",
   skills: [
-    "React",
+    "Laravel",
+    "REST API",
     "Next.js",
-    "Typescript",
-    "Node.js",
-    "Python",
-    "Postgres",
-    "Docker",
-    "Java",
-    "C++",
+    "TypeScript",
+    "TailwindCSS",
+    "MySQL",
+    "Linux (Ubuntu)",
+    "Cyber Security Basics",
+    "Networking",
+    "Git & GitHub",
+    "Postman",
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
@@ -108,119 +110,119 @@ export const DATA = {
     },
   ],
   gallery: [
-{
-title:"Raimuna Camp Experience",
-image:"/pramuka.jpeg",
-category:"Organization",
-description:"Documented a memorable moment during Raimuna Cabang Kabupaten Bogor 2024, highlighting friendship, collaboration, and the spirit of togetherness built throughout the camp experience.",
-date:"2024",
-},
+    {
+      title: "Raimuna Camp Experience",
+      image: "/pramuka.jpeg",
+      category: "Organization",
+      description: "Documented a memorable moment during Raimuna Cabang Kabupaten Bogor 2024, highlighting friendship, collaboration, and the spirit of togetherness built throughout the camp experience.",
+      date: "2024",
+    },
 
-{
-title:"School River Rafting Outing",
-image:"/outing.jpg",
-category:"School Memories",
-description:"Participated in a school river rafting outing involving inflatable boat activities through natural streams. The experience strengthened teamwork, courage, adaptability, and problem-solving while enjoying outdoor adventure with classmates.",
-date:"2025",
-},
+    {
+      title: "School River Rafting Outing",
+      image: "/outing.jpg",
+      category: "School Memories",
+      description: "Participated in a school river rafting outing involving inflatable boat activities through natural streams. The experience strengthened teamwork, courage, adaptability, and problem-solving while enjoying outdoor adventure with classmates.",
+      date: "2025",
+    },
 
-{
-title:"Raimuna Cabang 2024",
-image:"/raimuna.jpg",
-category:"School Memories",
-description:"Participated in the regional scouting event Raimuna Cabang Kabupaten Bogor 2024, engaging in leadership activities, teamwork challenges, and outdoor skill development. This experience strengthened discipline, collaboration, and problem-solving through various scouting programs.",
-date:"2022",
-},
+    {
+      title: "Raimuna Cabang 2024",
+      image: "/raimuna.jpg",
+      category: "School Memories",
+      description: "Participated in the regional scouting event Raimuna Cabang Kabupaten Bogor 2024, engaging in leadership activities, teamwork challenges, and outdoor skill development. This experience strengthened discipline, collaboration, and problem-solving through various scouting programs.",
+      date: "2022",
+    },
 
-{
-title:"BITFOS Wilayah 12",
-image:"/bitfos.jpg",
-category:"Volunteer",
-description:"Participated in a social activity sharing iftar with FOSJABAR.",
-date:"2025",
-},
+    {
+      title: "BITFOS Wilayah 12",
+      image: "/bitfos.jpg",
+      category: "Volunteer",
+      description: "Participated in a social activity sharing iftar with FOSJABAR.",
+      date: "2025",
+    },
 
-{
-title:"Raimuna Cabang 2024",
-image:"/raimuna.jpg",
-category:"Organization",
-description:"Participated in the regional scouting event Raimuna Cabang Kabupaten Bogor 2024, engaging in leadership activities, teamwork challenges, and outdoor skill development. This experience strengthened discipline, collaboration, and problem-solving through various scouting programs.",
-date:"2023",
-},
+    {
+      title: "Raimuna Cabang 2024",
+      image: "/raimuna.jpg",
+      category: "Organization",
+      description: "Participated in the regional scouting event Raimuna Cabang Kabupaten Bogor 2024, engaging in leadership activities, teamwork challenges, and outdoor skill development. This experience strengthened discipline, collaboration, and problem-solving through various scouting programs.",
+      date: "2023",
+    },
 
-{
-title:"BSI Flash Futsal 2024",
-image:"/bsi2.jpg",
-category:"Competition",
-description:"Participated in the BSI Flash regional futsal competition, strengthening teamwork, discipline, and competitive spirit through inter-school matches. The experience enhanced collaboration, strategy, and sportsmanship in a high-energy tournament environment.",
-date:"2024",
-},
+    {
+      title: "BSI Flash Futsal 2024",
+      image: "/bsi2.jpg",
+      category: "Competition",
+      description: "Participated in the BSI Flash regional futsal competition, strengthening teamwork, discipline, and competitive spirit through inter-school matches. The experience enhanced collaboration, strategy, and sportsmanship in a high-energy tournament environment.",
+      date: "2024",
+    },
 
-{
-title:"West Bogor Student Futsal League",
-image:"/liga.jpg",
-category:"Competition",
-description:"Participated in the West Bogor Student Futsal League, competing in an inter-school tournament that strengthened teamwork, discipline, and competitive spirit. The experience enhanced collaboration, strategy, and sportsmanship through high-intensity matches.",
-date:"2025",
-},
+    {
+      title: "West Bogor Student Futsal League",
+      image: "/liga.jpg",
+      category: "Competition",
+      description: "Participated in the West Bogor Student Futsal League, competing in an inter-school tournament that strengthened teamwork, discipline, and competitive spirit. The experience enhanced collaboration, strategy, and sportsmanship through high-intensity matches.",
+      date: "2025",
+    },
 
-{
-title:"Teacher Day Celebration",
-image:"/hg.jpg",
-category:"School Memories",
-description:"Participated in Teacher’s Day activities to appreciate educators through performances, collaboration, and school events. This experience fostered creativity, teamwork, and gratitude while contributing to a memorable celebration for teachers..",
-date:"2025",
-},
+    {
+      title: "Teacher Day Celebration",
+      image: "/hg.jpg",
+      category: "School Memories",
+      description: "Participated in Teacher’s Day activities to appreciate educators through performances, collaboration, and school events. This experience fostered creativity, teamwork, and gratitude while contributing to a memorable celebration for teachers..",
+      date: "2025",
+    },
 
-{
-title:"School Seminar by Student Council (OSIS)",
-image:"/seminar.jpg",
-category:"Organization",
-description:"Participated in a school seminar organized by the student council, engaging in knowledge-sharing sessions focused on self-development, leadership, and collaboration. This experience broadened my perspective, improved communication skills, and encouraged active involvement in academic and organizational activities.",
-date:"2024",
-},
+    {
+      title: "School Seminar by Student Council (OSIS)",
+      image: "/seminar.jpg",
+      category: "Organization",
+      description: "Participated in a school seminar organized by the student council, engaging in knowledge-sharing sessions focused on self-development, leadership, and collaboration. This experience broadened my perspective, improved communication skills, and encouraged active involvement in academic and organizational activities.",
+      date: "2024",
+    },
 
-{
-title:"Computer Hardware Assembly Practice",
-image:"/komjar.jpg",
-category:"School Memories",
-description:"Engaged in practical computer assembly activities involving component installation, hardware configuration, and system setup. This activity enhanced foundational technical skills and understanding of computer hardware systems.",
-date:"2023",
-},
+    {
+      title: "Computer Hardware Assembly Practice",
+      image: "/komjar.jpg",
+      category: "School Memories",
+      description: "Engaged in practical computer assembly activities involving component installation, hardware configuration, and system setup. This activity enhanced foundational technical skills and understanding of computer hardware systems.",
+      date: "2023",
+    },
 
-{
-title:"Music Class Performance Practice",
-image:"/seni.jpg",
-category:"School Memories",
-description:"Participated in a creative music class project involving singing performance recording and simple video production using available tools. This activity developed creativity, collaboration, and basic multimedia production skills.",
-date:"2023",
-},
+    {
+      title: "Music Class Performance Practice",
+      image: "/seni.jpg",
+      category: "School Memories",
+      description: "Participated in a creative music class project involving singing performance recording and simple video production using available tools. This activity developed creativity, collaboration, and basic multimedia production skills.",
+      date: "2023",
+    },
 
-{
-title:"Mount Sumbing Expedition",
-image:"/sumbing.jpg",
-category:"Adventure",
-description:"Embarked on an expedition to Mount Sumbing, navigating challenging trails and high-altitude terrain while building endurance, resilience, and teamwork. The journey was not only an outdoor adventure, but also a lesson in persistence and self-discovery.",
-date:"13 April 2026",
-},
+    {
+      title: "Mount Sumbing Expedition",
+      image: "/sumbing.jpg",
+      category: "Adventure",
+      description: "Embarked on an expedition to Mount Sumbing, navigating challenging trails and high-altitude terrain while building endurance, resilience, and teamwork. The journey was not only an outdoor adventure, but also a lesson in persistence and self-discovery.",
+      date: "13 April 2026",
+    },
 
-{
-title:"Mount Sumbing Summit",
-image:"/rajawali.png",
-category:"Adventure",
-description:"Reached the summit of Mount Sumbing through a challenging trekking journey that required persistence, preparation, and teamwork. This experience reflects resilience, adventure, and a strong spirit of exploration.",
-date:"13 April 2026",
-},
+    {
+      title: "Mount Sumbing Summit",
+      image: "/rajawali.png",
+      category: "Adventure",
+      description: "Reached the summit of Mount Sumbing through a challenging trekking journey that required persistence, preparation, and teamwork. This experience reflects resilience, adventure, and a strong spirit of exploration.",
+      date: "13 April 2026",
+    },
 
-{
-title:"Mount Sindoro Expedition",
-image:"/sindoro.jpg",
-category:"Adventure",
-description:"Undertook an expedition to Mount Sindoro, embracing the challenge of steep ascents, changing conditions, and long-distance trekking. The experience strengthened adaptability, mental toughness, and appreciation for exploration.",
-date:"23-24 March 2026",
-},
+    {
+      title: "Mount Sindoro Expedition",
+      image: "/sindoro.jpg",
+      category: "Adventure",
+      description: "Undertook an expedition to Mount Sindoro, embracing the challenge of steep ascents, changing conditions, and long-distance trekking. The experience strengthened adaptability, mental toughness, and appreciation for exploration.",
+      date: "23-24 March 2026",
+    },
 
-],
+  ],
   education: [
     {
       school: "SMPN 5 Ciamis",
@@ -250,11 +252,11 @@ date:"23-24 March 2026",
   projects: [
     {
       title: "Portofolio",
-      href: "https://github.com/iamzizi16/Project-akhir-porto",
+      href: "https://rifkyfbrn07-porto.vercel.app/",
       dates: "Nov 2025",
       active: true,
       description:
-        "My personal website where I showcase my projects, skills, and the progress I&apos;ve made as a developer. I designed it to feel clean, modern, and actually represent who I am—both in code and creativity. This project also became my playground for trying out animations, layouts, and better component structure as I keep improving.",
+         "Built a personal portfolio website using Next.js to showcase my projects, skills, and experience. The website features a modern UI, smooth animations, and interactive components including a dynamic gallery and 3D elements. Optimized for performance and deployed using Vercel.",
       technologies: [
         "Next.js",
         "Typescript",
@@ -283,8 +285,8 @@ date:"23-24 March 2026",
         "HTML",
         "CSS",
         "javaScript",
-        
-        
+
+
       ],
       links: [
         {
@@ -342,5 +344,5 @@ date:"23-24 March 2026",
         "",
     },
   ],
-  
-    }as const;
+
+} as const;
