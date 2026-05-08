@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import BlurFade from "@/components/magicui/blur-fade";
 import GooeyNav from "@/components/ui/GooeyNav";
-import SplashCursor from "@/components/SplashCursor";
 import { DATA } from "@/data/resume";
 import CircularGallery from "@/components/CircularGallery";
 
@@ -53,7 +52,7 @@ export default function GalleryPage() {
 
   return (
     <>
-      <SplashCursor />
+      
 
       <GooeyNav
         items={items}
