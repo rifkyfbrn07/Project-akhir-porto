@@ -1,19 +1,24 @@
 "use client";
 
-import { HackathonCard } from "@/components/hackathon-card";
+import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
+
 import BlurFade from "@/components/magicui/blur-fade";
 import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
 import { Badge } from "@/components/ui/badge";
+
 import { DATA } from "@/data/resume";
+
 import Link from "next/link";
 import Markdown from "react-markdown";
+
 import ProfileCard from "@/components/MyTiltAvatar";
-import GooeyNav from '@/components/ui/GooeyNav'
-import SplashCursor from '@/components/SplashCursor'
-import RotatingText from '@/components/RotatingText'
+import GooeyNav from "@/components/ui/GooeyNav";
+import RotatingText from "@/components/RotatingText";
 
 const BLUR_FADE_DELAY = 0.04;
+
 const items = [
   { label: "Home", href: "/" },
   { label: "Gallery", href: "/gallery" },
@@ -21,238 +26,473 @@ const items = [
 ];
 
 export default function Page() {
+  const { theme } = useTheme();
+
+  const navColors =
+    theme === "dark"
+      ? [1, 2, 3, 1, 2, 3, 1, 4]
+      : [4, 4, 4, 4, 4, 4];
+
   return (
+    <main className="relative w-full overflow-x-hidden bg-background text-foreground">
 
-    <main className="flex flex-col min-h-[100dvh] space-y-10">
-      <div style={{
-        height: '60px',
-        position: 'relative',
+      {/* BACKGROUND */}
+      <div className="fixed inset-0 -z-50 bg-background" />
 
-        zIndex: 50,
-      }}>
-        <SplashCursor />
-        <GooeyNav
-          items={items}
-          particleCount={15}
-          particleDistances={[90, 10]}
-          particleR={100}
-          initialActiveIndex={0}
-          animationTime={600}
-          timeVariance={300}
-          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-        />
+      {/* GRID */}
+      <div
+        className="
+          fixed inset-0 -z-50
+          bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]
+          bg-[size:24px_24px]
+        "
+      />
+
+      {/* GLOW */}
+      <div className="fixed top-[-250px] left-[-250px] w-[600px] h-[600px] bg-blue-500/10 blur-[140px] rounded-full -z-40" />
+
+      <div className="fixed bottom-[-250px] right-[-250px] w-[600px] h-[600px] bg-violet-500/10 blur-[140px] rounded-full -z-40" />
+
+
+
+      {/* NAVBAR */}
+      <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 px-4">
+        <motion.div
+          initial={{ y: -80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7 }}
+          className="
+            rounded-full
+            border border-zinc-200/50 dark:border-zinc-800/50
+            bg-white/60 dark:bg-zinc-900/50
+            backdrop-blur-2xl
+            shadow-[0_8px_40px_rgba(0,0,0,0.08)]
+            px-3 py-2
+          "
+        >
+          <GooeyNav
+            items={items}
+            particleCount={15}
+            particleDistances={[90, 10]}
+            particleR={100}
+            initialActiveIndex={0}
+            animationTime={600}
+            timeVariance={300}
+            colors={navColors}
+          />
+        </motion.div>
       </div>
+
+      {/* HERO */}
       <section
         id="hero"
-        className="relative w-full max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+        className="
+          relative
+          min-h-screen
+          flex items-center
+          pt-32
+        "
       >
-        <div className="flex-1 space-y-6 text-center md:text-left relative overflow-hidden">
-          {/* ✦ Background animasi highlight ✦ */}
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16 w-full">
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
 
-          {/* ✦ Nama Rifky Febrian ✦ */}
-          <h1
-            className="
-    relative z-10 
-    text-5xl sm:text-6xl lg:text-7xl 
-    font-extrabold tracking-tight leading-tight
-    text-gray-900 dark:text-white
-  "
-          >
-            <span className="block text-xl sm:text-2xl font-light ...">
-              Welcome to my portfolio
-            </span>
-
-            <span className="block text-base sm:text-lg font-medium text-gray-600 dark:text-gray-400 tracking-wide">
-              Backend Developer • Laravel • Cyber Security
-            </span>
-
-            Hi, I&apos;m{" "}
-            <span className="font-black text-gray-900 dark:text-white">
-              {DATA.name.split(" ")[0]}
-            </span>
-
-            <p className="text-zinc-500 dark:text-zinc-400 text-[15px] leading-relaxed max-w-md mx-auto md:mx-0 font-medium">
-              I build secure and scalable web applications using Laravel & Next.js,
-              with a strong focus on backend systems and API development.
-            </p>
-
-          </h1>
-
-          {/* ✦ Deskripsi ✦ */}
-          <p className="text-muted-foreground text-lg max-w-md mx-auto md:mx-0 relative z-10">
-            {DATA.description}
-          </p>
-
-          {/* ✦ Tombol Aksi ✦ */}
-          <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 relative z-10">
-            <a
-              href="/cv.pdf"
-              download
-              className="px-6 py-3 rounded-full font-semibold bg-[#2563eb] text-white shadow-[0_0_15px_rgba(37,99,235,0.6)] hover:shadow-[0_0_25px_rgba(37,99,235,0.8)] hover:scale-[1.05] transition-all duration-300"
+            {/* LEFT */}
+            <motion.div
+              initial={{ opacity: 0, y: 70 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="space-y-8 text-center lg:text-left"
             >
-              Download CV
-            </a>
-            <a
-              href="#projects"
-              className="px-6 py-3 rounded-full font-semibold border border-[#2563eb] text-[#2563eb] dark:text-[#93c5fd] hover:bg-[#2563eb] hover:text-white transition-all duration-300"
+
+              <div className="space-y-3">
+
+                <div
+                  className="
+                    inline-flex items-center gap-2
+                    px-4 py-2 rounded-full
+                    border border-zinc-200 dark:border-zinc-800
+                    bg-white/50 dark:bg-zinc-900/50
+                    backdrop-blur-xl
+                    text-sm
+                  "
+                >
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  Available for work
+                </div>
+
+                <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+                  Backend Developer • Laravel • Cyber Security
+                </p>
+
+              </div>
+
+              <div className="space-y-3">
+
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">
+                  Hi, I&apos;m
+                </h1>
+
+                <h1
+                  className="
+                    text-6xl sm:text-7xl lg:text-8xl
+                    font-black tracking-tight leading-none
+                    bg-gradient-to-r
+                    from-blue-600
+                    via-violet-500
+                    to-cyan-400
+                    bg-clip-text text-transparent
+                  "
+                >
+                  {DATA.name.split(" ")[0]}
+                </h1>
+
+              </div>
+
+              <p
+                className="
+                  text-zinc-600 dark:text-zinc-400
+                  text-lg md:text-xl
+                  leading-relaxed
+                  max-w-2xl
+                  mx-auto lg:mx-0
+                "
+              >
+                I build secure and scalable web applications using
+                Laravel & Next.js with a strong focus on backend
+                systems, APIs, and clean user experiences.
+              </p>
+
+              <div
+                className="
+                  border-l-2 border-blue-500
+                  pl-5
+                  text-zinc-700 dark:text-zinc-300
+                  text-lg
+                "
+              >
+                Full-Stack Web Developer <br />
+                Networking & Cyber Security Enthusiast
+              </div>
+
+              {/* BUTTON */}
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+
+                <motion.a
+                  whileHover={{
+                    scale: 1.05,
+                    y: -5,
+                  }}
+                  whileTap={{ scale: 0.96 }}
+                  href="/cv.pdf"
+                  download
+                  className="
+                    px-7 py-3 rounded-full
+                    bg-blue-600 text-white font-semibold
+                    shadow-[0_10px_40px_rgba(37,99,235,0.35)]
+                    transition-all duration-300
+                  "
+                >
+                  Download CV
+                </motion.a>
+
+                <motion.a
+                  whileHover={{
+                    scale: 1.05,
+                    y: -5,
+                  }}
+                  whileTap={{ scale: 0.96 }}
+                  href="#projects"
+                  className="
+                    px-7 py-3 rounded-full
+                    border border-zinc-300 dark:border-zinc-700
+                    bg-white/40 dark:bg-zinc-900/40
+                    backdrop-blur-xl
+                    hover:bg-zinc-100 dark:hover:bg-zinc-800
+                    transition-all duration-300
+                  "
+                >
+                  See My Work
+                </motion.a>
+
+              </div>
+
+              {/* ROTATING */}
+              <div className="pt-4 flex justify-center lg:justify-start">
+
+                <RotatingText
+                  texts={[
+                    "FULLSTACK DEV",
+                    "PROBLEM SOLVER",
+                    "FAST LEARNER",
+                    "TEAM PLAYER",
+                  ]}
+                  mainClassName="
+                    px-6 py-3
+                    rounded-2xl
+                    bg-gradient-to-r from-blue-600 to-violet-600
+                    text-white font-bold
+                    shadow-[0_10px_40px_rgba(99,102,241,0.35)]
+                  "
+                  staggerFrom="last"
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "-120%" }}
+                  staggerDuration={0.025}
+                  splitLevelClassName="overflow-hidden"
+                  transition={{
+                    type: "spring",
+                    damping: 30,
+                    stiffness: 400,
+                  }}
+                  rotationInterval={2000}
+                />
+
+              </div>
+
+            </motion.div>
+
+            {/* RIGHT */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="flex justify-center"
             >
-              See My Work
-            </a>
+
+              <div className="relative">
+
+                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
+
+                <ProfileCard
+                  name="Rifky Febrian"
+                  title="Software Engineer"
+                  handle="Rifky"
+                  status="Online"
+                  contactText="Contact Me"
+                  avatarUrl="./fabian.png"
+                  showUserInfo={true}
+                  enableTilt={true}
+                  enableMobileTilt={false}
+                  onContactClick={() =>
+                  (window.location.href =
+                    "mailto:febrianrfiky590@gmail.com")
+                  }
+                />
+
+              </div>
+
+            </motion.div>
+
           </div>
 
-          {/* ✦ Animasi Gradient ✦ */}
-
         </div>
-
-
-
-        <ProfileCard
-          name="Rifky Febrian"
-          title="Software Engineer"
-          handle="Rifky"
-          status="Online"
-          contactText="Contact Me"
-          avatarUrl="./fabian.png"
-          showUserInfo={true}
-          enableTilt={true}
-          enableMobileTilt={false}
-          onContactClick={() => window.location.href = "mailto:febrianrfiky590@gmail.com"}
-        />
-
-        <RotatingText
-          texts={['FULLSTACK DEV', 'PROBLEM SOLVER', 'FAST LEARNER', 'TEAM PLAYER']}
-          mainClassName="px-4 sm:px-6 md:px-8 bg-[#6933FF] text-white font-extrabold uppercase overflow-hidden py-1 sm:py-2 md:py-2 justify-center rounded-xl shadow-[0_0_20px_rgba(105,51,255,0.6)] tracking-wide"
-          staggerFrom="last"
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "-120%" }}
-          staggerDuration={0.025}
-          splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-          transition={{ type: "spring", damping: 30, stiffness: 400 }}
-          rotationInterval={2000}
-        />
-
       </section>
 
+      {/* ABOUT */}
+      <section id="about" className="py-32">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
 
-      <section id="about">
-        <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <h2 className="text-xl font-bold">About</h2>
-        </BlurFade>
-        <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {DATA.summary}
-          </Markdown>
-        </BlurFade>
-      </section>
-      <section id="work">
-        <div className="flex min-h-0 flex-col gap-y-3">
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-title">
-              Experience & Events
+          <BlurFade delay={BLUR_FADE_DELAY * 3}>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-10">
+              About Me
             </h2>
           </BlurFade>
-          {DATA.work.map((work, id) => (
-            <BlurFade
-              key={work.company}
-              delay={BLUR_FADE_DELAY * 6 + id * 0.05}
-            >
-              <ResumeCard
-                key={work.company}
-                logoUrl={work.logoUrl}
-                altText={work.company}
-                title={work.company}
-                subtitle={work.title}
-                href={work.href}
-                badges={work.badges}
-                period={`${work.start} - ${work.end ?? "Present"}`}
-                description={work.description}
-              />
-            </BlurFade>
-          ))}
-        </div>
-      </section>
-      <section id="education">
-        <div className="flex min-h-0 flex-col gap-y-3">
-          <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className="text-xl font-bold">Education</h2>
-          </BlurFade>
-          {DATA.education.map((education, id) => (
-            <BlurFade
-              key={education.school}
-              delay={BLUR_FADE_DELAY * 8 + id * 0.05}
-            >
-              <ResumeCard
-                key={education.school}
-                href={education.href}
-                logoUrl={education.logoUrl}
-                altText={education.school}
-                title={education.school}
-                subtitle={education.degree}
-                period={`${education.start} - ${education.end}`}
-              />
-            </BlurFade>
-          ))}
-        </div>
-      </section>
-      <section id="skills">
-        <div className="flex min-h-0 flex-col gap-y-3">
-          <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="text-xl font-bold">Skills</h2>
-          </BlurFade>
-          <div className="flex flex-wrap gap-1">
-            {DATA.skills.map((skill, id) => (
-              <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
-                <Badge key={skill}>{skill}</Badge>
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section id="security">
-        <div className="flex flex-col gap-y-3">
-          <h2 className="text-xl font-bold">Cyber Security & Networking</h2>
 
-          <ul className="text-muted-foreground space-y-2 text-sm">
-            <li>• Participated in WorldSkills ASEAN Cyber Security selection</li>
-            <li>• Solved basic Capture The Flag (CTF) challenges</li>
-            <li>• Experience using Linux (Ubuntu)</li>
-            <li>• Basic networking configuration and troubleshooting</li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="projects">
-        <div className="space-y-12 w-full py-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 11}>
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block px-3 py-1 text-sm rounded-lg
-                bg-black text-white
-                dark:bg-white dark:text-black">
-                  My Project
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  Check out my latest work
-                </h2>
-                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  I&apos;ve worked on a variety of projects, from simple
-                  websites to complex web applications. Here are a few of my
-                  favorites.
-                </p>
-              </div>
+          <BlurFade delay={BLUR_FADE_DELAY * 4}>
+            <div
+              className="
+                rounded-[32px]
+                border border-zinc-200 dark:border-zinc-800
+                bg-white/50 dark:bg-zinc-900/40
+                backdrop-blur-2xl
+                p-8 md:p-10
+              "
+            >
+              <Markdown className="prose dark:prose-invert max-w-none">
+                {DATA.summary}
+              </Markdown>
             </div>
           </BlurFade>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto">
-            {DATA.projects.map((project, id) => (
+
+        </div>
+      </section>
+
+      {/* EXPERIENCE */}
+      <section id="work" className="py-32">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-12">
+            Experience & Events
+          </h2>
+
+          <div className="space-y-6">
+
+            {DATA.work.map((work, id) => (
               <BlurFade
-                key={project.title}
-                delay={BLUR_FADE_DELAY * 12 + id * 0.05}
+                key={`${work.company}-${work.start}-${id}`}
+                delay={BLUR_FADE_DELAY * 5 + id * 0.05}
               >
+
+                <motion.div
+                  whileHover={{
+                    y: -5,
+                  }}
+                  className="
+                    rounded-[28px]
+                    border border-zinc-200 dark:border-zinc-800
+                    bg-white/50 dark:bg-zinc-900/40
+                    backdrop-blur-2xl
+                    p-2
+                    transition-all
+                  "
+                >
+
+                  <ResumeCard
+                    logoUrl={work.logoUrl}
+                    altText={work.company}
+                    title={work.company}
+                    subtitle={work.title}
+                    href={work.href}
+                    badges={work.badges}
+                    period={`${work.start} - ${work.end ?? "Present"}`}
+                    description={work.description}
+                  />
+
+                </motion.div>
+
+              </BlurFade>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* EDUCATION */}
+      <section id="education" className="py-32">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-12">
+            Education
+          </h2>
+
+          <div className="space-y-6">
+
+            {DATA.education.map((education, id) => (
+              <BlurFade
+                key={education.school}
+                delay={BLUR_FADE_DELAY * 7 + id * 0.05}
+              >
+
+                <motion.div
+                  whileHover={{
+                    y: -5,
+                  }}
+                  className="
+                    rounded-[28px]
+                    border border-zinc-200 dark:border-zinc-800
+                    bg-white/50 dark:bg-zinc-900/40
+                    backdrop-blur-2xl
+                    p-2
+                  "
+                >
+
+                  <ResumeCard
+                    href={education.href}
+                    logoUrl={education.logoUrl}
+                    altText={education.school}
+                    title={education.school}
+                    subtitle={education.degree}
+                    period={`${education.start} - ${education.end}`}
+                  />
+
+                </motion.div>
+
+              </BlurFade>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* SKILLS */}
+      <section id="skills" className="py-32">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-10">
+            Skills
+          </h2>
+
+          <div className="flex flex-wrap gap-4">
+
+            {DATA.skills.map((skill, id) => (
+              <BlurFade
+                key={skill}
+                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
+              >
+
+                <motion.div
+                  whileHover={{
+                    scale: 1.05,
+                    y: -4,
+                  }}
+                >
+                  <Badge
+                    className="
+                      px-5 py-3 rounded-2xl
+                      bg-white dark:bg-zinc-900
+                      text-zinc-900 dark:text-zinc-100
+                      border border-zinc-200 dark:border-zinc-700
+                      shadow-sm
+                    "
+                  >
+                    {skill}
+                  </Badge>
+                </motion.div>
+
+              </BlurFade>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* PROJECTS */}
+      <section id="projects" className="py-32">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
+
+          <div className="text-center mb-16">
+
+            <h2 className="text-5xl font-black mb-4">
+              Featured Projects
+            </h2>
+
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+              Some projects I’ve worked on recently.
+            </p>
+
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            {DATA.projects.map((project) => (
+              <motion.div
+                key={project.title}
+                whileHover={{
+                  y: -10,
+                  scale: 1.02,
+                }}
+                transition={{
+                  duration: 0.3,
+                  type: "spring",
+                }}
+              >
+
                 <ProjectCard
                   href={project.href}
-                  key={project.title}
                   title={project.title}
                   description={project.description}
                   dates={project.dates}
@@ -261,40 +501,62 @@ export default function Page() {
                   video={project.video}
                   links={project.links}
                 />
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section id="contact">
-        <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 16}>
-            <div className="space-y-3">
-              <div
-                className="inline-block px-3 py-1 text-sm rounded-lg
-                bg-black text-white
-                dark:bg-white dark:text-black">
-                My Project
-              </div>
 
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Get in Touch
-              </h2>
-              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Want to chat? Just shoot me a dm{" "}
-                <Link
-                  href={DATA.contact.social.X.url}
-                  className="text-blue-500 hover:underline"
-                >
-                  with a direct question on twitter
-                </Link>{" "}
-                and I&apos;ll respond whenever I can. I will ignore all
-                soliciting.
-              </p>
-            </div>
-          </BlurFade>
+              </motion.div>
+            ))}
+
+          </div>
+
         </div>
       </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="py-32">
+        <div className="max-w-[900px] mx-auto px-6 lg:px-16 text-center">
+
+          <div
+            className="
+              rounded-[40px]
+              border border-zinc-200 dark:border-zinc-800
+              bg-white/50 dark:bg-zinc-900/40
+              backdrop-blur-2xl
+              p-12
+            "
+          >
+
+            <h2 className="text-5xl font-black mb-6">
+              Let&apos;s Work Together
+            </h2>
+
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-10">
+              Interested in working together or have a project in mind?
+            </p>
+
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{
+                scale: 0.95,
+              }}
+            >
+              <Link
+                href={DATA.contact.social.X.url}
+                className="
+                  inline-flex px-8 py-4 rounded-full
+                  bg-blue-600 text-white
+                  shadow-[0_10px_40px_rgba(37,99,235,0.35)]
+                "
+              >
+                Contact Me
+              </Link>
+            </motion.div>
+
+          </div>
+
+        </div>
+      </section>
+
     </main>
   );
 }

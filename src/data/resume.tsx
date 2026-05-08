@@ -285,40 +285,52 @@ Highlights:
         "",
     },
     {
-      title: "Web-esport",
-      href: "https://github.com/iamzizi16/Web-esport",
-      dates: "August 2024",
+      title: "IoT Monitoring Dashboard",
+      href: "https://github.com/iamzizi16/sensor-app",
+      dates: "April 2026",
       active: true,
       description: `
-Esports-Themed Web Interface
+IoT Monitoring Dashboard
 
-Tech Stack:
-HTML, CSS, JavaScript
+Tech Stack: Laravel 12, MySQL, MQTT, Tailwind CSS, JavaScript, Next.js
 
 Features:
-- Responsive layout for multiple screen sizes
-- Structured UI sections (navbar, content, footer)
-- Custom styling with CSS for gaming-themed visuals
+
+Real-time monitoring of various sensor types
+
+Full CRUD system for device management
+
+MQTT protocol integration for live data streams
+
+Status tracking and search functionality
 
 Highlights:
-- Practiced layouting and responsive design fundamentals
-- Improved understanding of DOM structure and styling
+
+Built a scalable backend for IoT data handling
+
+Implemented clean and intuitive admin dashboard UI
+
+Laravel MySQL MQTT PHP
+
 `,
       technologies: [
-        "HTML",
-        "CSS",
-        "javaScript",
+        "Tailwind CSS",
+        "JavaScript",
+        "Next.js",
+        "Laravel 12",
+        "MySQL",
+        "MQTT",
 
 
       ],
       links: [
         {
           type: "Source",
-          href: "https://github.com/iamzizi16/Web-esport",
+          href: "https://github.com/iamzizi16/sensor-app",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/Webmpl.png",
+      image: "/sensor.png",
       video: "",
     },
     {

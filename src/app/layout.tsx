@@ -57,20 +57,24 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
+          "min-h-screen w-full overflow-x-hidden bg-background font-sans antialiased",
           fontSans.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="dark">
+
           <TooltipProvider delayDuration={0}>
-            
-            {/* NAVBAR DI ATAS */}
+
+            {/* NAVBAR */}
             <Navbar />
 
-            {/* PAGE CONTENT */}
-            {children}
+            {/* CONTENT */}
+            <main className="w-full">
+              {children}
+            </main>
 
           </TooltipProvider>
+
         </ThemeProvider>
       </body>
     </html>

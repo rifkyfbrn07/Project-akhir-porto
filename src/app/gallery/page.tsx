@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+} from "framer-motion";
+
 import BlurFade from "@/components/magicui/blur-fade";
 import GooeyNav from "@/components/ui/GooeyNav";
-import SplashCursor from "@/components/SplashCursor";
-import { DATA } from "@/data/resume";
 import CircularGallery from "@/components/CircularGallery";
+import { DATA } from "@/data/resume";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -27,6 +32,8 @@ type GalleryItem = {
 export default function GalleryPage() {
   const [active, setActive] = useState<GalleryItem | null>(null);
 
+  const { scrollYProgress } = useScroll();
+
   const gallery: readonly GalleryItem[] = DATA.gallery;
 
   const groupedGallery = gallery.reduce((acc, item) => {
@@ -39,42 +46,167 @@ export default function GalleryPage() {
   }, {} as Record<string, GalleryItem[]>);
 
   return (
-    <>
-      <SplashCursor />
+    <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
 
-      <GooeyNav
-        items={items}
-        particleCount={15}
-        particleDistances={[90, 10]}
-        particleR={100}
-        initialActiveIndex={1}
-        animationTime={600}
-        timeVariance={300}
-        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+      {/* SCROLL BAR */}
+      <motion.div
+        className="
+          fixed top-0 left-0 right-0
+          h-1 bg-blue-500
+          origin-left z-[999]
+        "
+        style={{
+          scaleX: scrollYProgress,
+        }}
       />
 
-      <section id="gallery">
-        <div className="space-y-20 w-full py-16 px-4 sm:px-6 lg:px-8">
+  
 
-          {/* HERO */}
-          <BlurFade delay={BLUR_FADE_DELAY * 8}>
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="px-4 py-1 text-sm rounded-xl bg-black text-white dark:bg-white dark:text-black">
-                Experience Gallery
-              </div>
+      {/* FLOATING BG */}
+      <div className="absolute inset-0 overflow-hidden -z-20">
 
-              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight">
-                Documenting My Journey
-              </h2>
+        <motion.div
+          animate={{
+            x: [0, 80, 0],
+            y: [0, 40, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="
+            absolute top-20 left-20
+            w-[400px] h-[400px]
+            bg-blue-500/10
+            rounded-full blur-[120px]
+          "
+        />
 
-              <p className="text-muted-foreground max-w-2xl md:text-xl">
-                Memories, achievements, and meaningful experiences I&apos;ve documented along the way.
-              </p>
+        <motion.div
+          animate={{
+            x: [0, -60, 0],
+            y: [0, 80, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="
+            absolute bottom-0 right-0
+            w-[400px] h-[400px]
+            bg-violet-500/10
+            rounded-full blur-[120px]
+          "
+        />
+
+      </div>
+
+      {/* NAVBAR */}
+      <div
+        className="
+          fixed top-0 left-0 w-full z-50
+          flex justify-center pt-6
+          backdrop-blur-2xl
+          bg-white/5 dark:bg-black/10
+          border-b border-white/10
+        "
+      >
+        <GooeyNav
+          items={items}
+          particleCount={15}
+          particleDistances={[90, 10]}
+          particleR={100}
+          initialActiveIndex={1}
+          animationTime={600}
+          timeVariance={300}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
+      </div>
+
+      {/* HERO */}
+      <section className="pt-40 pb-24 px-6">
+
+        <div className="max-w-7xl mx-auto">
+
+          <BlurFade delay={BLUR_FADE_DELAY * 3}>
+
+            <div className="text-center space-y-6">
+
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="
+                  inline-flex items-center gap-2
+                  px-5 py-2 rounded-full
+                  bg-zinc-100 dark:bg-zinc-900
+                  border border-zinc-200 dark:border-zinc-800
+                  text-sm font-medium
+                "
+              >
+                Gallery Showcase
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="
+                  text-5xl md:text-7xl
+                  font-black tracking-tight
+                "
+              >
+                My Journey &
+                <span className="text-blue-500">
+                  {" "}Memories
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+                className="
+                  max-w-2xl mx-auto
+                  text-zinc-600 dark:text-zinc-400
+                  text-lg leading-relaxed
+                "
+              >
+                Collection of experiences, achievements,
+                projects, competitions, and memorable moments.
+              </motion.p>
+
             </div>
+
           </BlurFade>
 
-          {/* TOP CIRCULAR */}
-          <div className="relative h-[330px]">
+        </div>
+
+      </section>
+
+      {/* CIRCULAR */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="pb-28"
+      >
+
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div
+            className="
+              relative h-[360px]
+              rounded-[40px]
+              overflow-hidden
+              border border-zinc-200 dark:border-zinc-800
+              bg-zinc-100/40 dark:bg-zinc-900/40
+              backdrop-blur-xl
+            "
+          >
             <CircularGallery
               bend={3}
               textColor="#ffffff"
@@ -83,160 +215,304 @@ export default function GalleryPage() {
             />
           </div>
 
+        </div>
 
-          {/* GROUPED GALLERY */}
+      </motion.section>
+
+      {/* GALLERY */}
+      <section className="pb-32">
+
+        <div className="max-w-7xl mx-auto px-6 space-y-28">
+
           {Object.entries(groupedGallery).map(([section, items]) => (
-            <section
+
+            <motion.div
               key={section}
-              className="max-w-7xl mx-auto space-y-8"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-10"
             >
 
-              {/* CATEGORY TITLE */}
+              {/* TITLE */}
               <div className="flex items-center gap-5">
-                <h2 className="text-4xl font-bold whitespace-nowrap">
+
+                <h2
+                  className="
+                    text-3xl md:text-4xl
+                    font-black tracking-tight
+                    whitespace-nowrap
+                  "
+                >
                   {section}
                 </h2>
 
-                <div className="h-px flex-1 bg-white/20" />
+                <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+
               </div>
 
+              {/* GRID */}
+              <motion.div
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.08,
+                    },
+                  },
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="
+                  grid
+                  grid-cols-1
+                  sm:grid-cols-2
+                  lg:grid-cols-3
+                  xl:grid-cols-4
+                  gap-7
+                "
+              >
 
-              {/* FIXED UNIFORM GRID */}
-              <div className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                md:grid-cols-3
-                lg:grid-cols-4
-                gap-6
-              ">
                 {items.map((item, i) => (
-                  <BlurFade
+
+                  <motion.div
                     key={i}
-                    delay={BLUR_FADE_DELAY * 10 + i * .05}
+                    variants={{
+                      hidden: {
+                        opacity: 0,
+                        y: 30,
+                      },
+                      show: {
+                        opacity: 1,
+                        y: 0,
+                      },
+                    }}
                   >
-                    <div
-                      onClick={() => setActive(item)}
-                      className="group cursor-pointer"
+
+                    <BlurFade
+                      delay={BLUR_FADE_DELAY * 10 + i * 0.05}
                     >
-                      <div className="
-                        relative
-                        w-full
-                        aspect-square
-                        rounded-2xl
-                        overflow-hidden
-                        shadow-xl
-                      ">
 
-                        <Image
-                          src={item.image}
-                          fill
-                          alt={item.title}
+                      <motion.div
+                        whileHover={{
+                          y: -10,
+                          scale: 1.02,
+                        }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 15,
+                        }}
+                        onClick={() => setActive(item)}
+                        className="
+                          group cursor-pointer
+                          rounded-3xl
+                          overflow-hidden
+                        "
+                      >
+
+                        <div
                           className="
-                            object-cover
-                            transition-all
-                            duration-500
-                            group-hover:scale-110
-                            group-hover:brightness-75
+                            relative aspect-square
+                            overflow-hidden
+                            rounded-3xl
+                            border border-zinc-200 dark:border-zinc-800
+                            bg-zinc-100 dark:bg-zinc-900
+                            shadow-xl
                           "
-                        />
+                        >
 
-                        <div className="
-                          absolute inset-0
-                          opacity-0
-                          group-hover:opacity-100
-                          transition
-                          bg-black/30
-                          flex items-center justify-center
-                          font-medium
-                        ">
-                          View
+                          <Image
+                            src={item.image}
+                            fill
+                            alt={item.title}
+                            className="
+                              object-cover
+                              transition-all duration-700 ease-out
+                              group-hover:scale-110
+                              group-hover:rotate-1
+                              group-hover:brightness-75
+                            "
+                          />
+
+                          {/* MOUSE GLOW */}
+                          <div
+                            className="
+                              absolute inset-0
+                              bg-gradient-to-tr
+                              from-white/0
+                              via-white/10
+                              to-white/0
+                              opacity-0
+                              group-hover:opacity-100
+                              transition duration-500
+                            "
+                          />
+
+                          {/* OVERLAY */}
+                          <div
+                            className="
+                              absolute inset-0
+                              bg-gradient-to-t
+                              from-black/70
+                              via-black/10
+                              to-transparent
+                              opacity-0 group-hover:opacity-100
+                              transition duration-500
+                            "
+                          />
+
+                          {/* CONTENT */}
+                          <div
+                            className="
+                              absolute bottom-0 left-0
+                              p-5
+                              translate-y-6
+                              opacity-0
+                              group-hover:translate-y-0
+                              group-hover:opacity-100
+                              transition-all duration-500
+                            "
+                          >
+
+                            <p className="text-white text-lg font-semibold">
+                              {item.title}
+                            </p>
+
+                            <p className="text-zinc-300 text-sm">
+                              {item.date}
+                            </p>
+
+                          </div>
+
                         </div>
 
-                      </div>
-                      <p className="mt-2 text-sm font-medium line-clamp-1">
-                      {item.title}
-                       </p>
-                    </div>
-                  </BlurFade>
-                ))}
-              </div>
+                      </motion.div>
 
-            </section>
+                    </BlurFade>
+
+                  </motion.div>
+
+                ))}
+
+              </motion.div>
+
+            </motion.div>
+
           ))}
 
         </div>
+
       </section>
 
-
-
       {/* MODAL */}
-      {active && (
-        <div
-          onClick={() => setActive(null)}
-          className="
-            fixed inset-0
-            bg-black/80
-            backdrop-blur-sm
-            flex items-center justify-center
-            p-4
-            z-50
-          "
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+
+        {active && (
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActive(null)}
             className="
-              bg-neutral-900
-              rounded-2xl
-              p-5
-              max-w-xl
-              w-full
+              fixed inset-0 z-[100]
+              bg-black/70 backdrop-blur-xl
+              flex items-center justify-center
+              p-4
             "
           >
-            <Image
-              src={active.image}
-              width={1600}
-              height={1200}
-              alt={active.title}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                scale: 0.9,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.9,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 18,
+              }}
+              onClick={(e) => e.stopPropagation()}
               className="
-                rounded-xl
-                mb-5
-                w-full
-                object-cover
-              "
-            />
-
-            <h2 className="text-3xl font-semibold mb-1">
-              {active.title}
-            </h2>
-
-            <p className="text-gray-400 text-sm mb-3">
-              {active.date}
-            </p>
-
-            <p className="text-gray-300 leading-relaxed">
-              {active.description}
-            </p>
-
-            <button
-              onClick={() => setActive(null)}
-              className="
-                mt-5
-                w-full
-                bg-white
-                text-black
-                py-3
-                rounded-xl
-                font-semibold
+                max-w-4xl w-full
+                rounded-[32px]
+                overflow-hidden
+                bg-white dark:bg-zinc-950
+                border border-zinc-200 dark:border-zinc-800
+                shadow-2xl
               "
             >
-              Close
-            </button>
 
-          </div>
-        </div>
-      )}
+              <div className="relative w-full h-[500px]">
 
-    </>
+                <Image
+                  src={active.image}
+                  fill
+                  alt={active.title}
+                  className="object-cover"
+                />
+
+              </div>
+
+              <div className="p-8 space-y-4">
+
+                <div>
+
+                  <h2 className="text-4xl font-black">
+                    {active.title}
+                  </h2>
+
+                  <p className="text-zinc-500 mt-2">
+                    {active.date}
+                  </p>
+
+                </div>
+
+                <p
+                  className="
+                    text-zinc-600 dark:text-zinc-400
+                    leading-relaxed text-lg
+                  "
+                >
+                  {active.description}
+                </p>
+
+                <button
+                  onClick={() => setActive(null)}
+                  className="
+                    mt-4
+                    px-6 py-3
+                    rounded-2xl
+                    bg-blue-600
+                    hover:bg-blue-500
+                    text-white font-semibold
+                    transition-all
+                  "
+                >
+                  Close
+                </button>
+
+              </div>
+
+            </motion.div>
+
+          </motion.div>
+
+        )}
+
+      </AnimatePresence>
+
+    </main>
   );
 }
