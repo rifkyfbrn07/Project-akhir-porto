@@ -6,7 +6,6 @@ import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
 import { DATA } from "@/data/resume";
 import GooeyNav from '@/components/ui/GooeyNav';
-import SplashCursor from '@/components/SplashCursor'
 
 const BLUR_FADE_DELAY = 0.04;
 const items = [
