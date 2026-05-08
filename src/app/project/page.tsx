@@ -19,7 +19,6 @@ export default function Page() {
     <>
      
 
-    <SplashCursor />
   <GooeyNav
     items={items}
     particleCount={15}
