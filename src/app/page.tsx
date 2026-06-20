@@ -269,16 +269,18 @@ export default function Page() {
           </div>
 
           <motion.div
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -8 }}
             className="
       rounded-3xl
-      border
-      border-border
-      bg-background/60
+      bg-gradient-to-br from-slate-100/80 to-slate-50/80
+      dark:from-slate-900/80 dark:to-slate-800/80
       backdrop-blur-xl
+      shadow-[8px_8px_24px_rgba(0,0,0,0.12),-8px_-8px_24px_rgba(255,255,255,0.08)]
+      dark:shadow-[8px_8px_24px_rgba(0,0,0,0.4),-8px_-8px_24px_rgba(255,255,255,0.05)]
+      border border-white/30 dark:border-white/10
       p-8
-      shadow-sm
       max-w-3xl
+      transition-all duration-300
       "
           >
 
@@ -288,6 +290,7 @@ export default function Page() {
         dark:prose-invert
         max-w-none
         leading-8
+        text-slate-700 dark:text-slate-300
         "
             >
               {DATA.summary}
@@ -344,15 +347,18 @@ export default function Page() {
 
                 <motion.div
                   whileHover={{
-                    y: -5,
+                    y: -8,
                   }}
                   className="
                     rounded-[28px]
-                    border border-zinc-200 dark:border-zinc-800
-                    bg-white/50 dark:bg-zinc-900/40
+                    bg-gradient-to-br from-slate-100/80 to-slate-50/80
+                    dark:from-slate-900/80 dark:to-slate-800/80
                     backdrop-blur-2xl
+                    shadow-[8px_8px_24px_rgba(0,0,0,0.12),-8px_-8px_24px_rgba(255,255,255,0.08)]
+                    dark:shadow-[8px_8px_24px_rgba(0,0,0,0.4),-8px_-8px_24px_rgba(255,255,255,0.05)]
+                    border border-white/30 dark:border-white/10
                     p-2
-                    transition-all
+                    transition-all duration-300
                   "
                 >
 
@@ -396,14 +402,18 @@ export default function Page() {
 
                 <motion.div
                   whileHover={{
-                    y: -5,
+                    y: -8,
                   }}
                   className="
                     rounded-[28px]
-                    border border-zinc-200 dark:border-zinc-800
-                    bg-white/50 dark:bg-zinc-900/40
+                    bg-gradient-to-br from-slate-100/80 to-slate-50/80
+                    dark:from-slate-900/80 dark:to-slate-800/80
                     backdrop-blur-2xl
+                    shadow-[8px_8px_24px_rgba(0,0,0,0.12),-8px_-8px_24px_rgba(255,255,255,0.08)]
+                    dark:shadow-[8px_8px_24px_rgba(0,0,0,0.4),-8px_-8px_24px_rgba(255,255,255,0.05)]
+                    border border-white/30 dark:border-white/10
                     p-2
+                    transition-all duration-300
                   "
                 >
 
@@ -516,14 +526,14 @@ export default function Page() {
                   className="
 rounded-[28px]
 overflow-hidden
-border
-border-zinc-200
-dark:border-zinc-800
-bg-white/60
-dark:bg-zinc-900/40
+bg-gradient-to-br from-slate-100/80 to-slate-50/80
+dark:from-slate-900/80 dark:to-slate-800/80
 backdrop-blur-xl
-shadow-lg
-hover:shadow-2xl
+shadow-[8px_8px_24px_rgba(0,0,0,0.12),-8px_-8px_24px_rgba(255,255,255,0.08)]
+dark:shadow-[8px_8px_24px_rgba(0,0,0,0.4),-8px_-8px_24px_rgba(255,255,255,0.05)]
+border border-white/30 dark:border-white/10
+hover:shadow-[12px_12px_32px_rgba(0,0,0,0.16)]
+dark:hover:shadow-[12px_12px_32px_rgba(0,0,0,0.5)]
 duration-300
 "
                 >
@@ -577,13 +587,12 @@ duration-300
 
             className="
 rounded-[40px]
-border
-border-zinc-200
-dark:border-zinc-800
-bg-gradient-to-br
-from-blue-500/10
-to-violet-500/10
+bg-gradient-to-br from-slate-100/80 to-slate-50/80
+dark:from-slate-900/80 dark:to-slate-800/80
 backdrop-blur-xl
+shadow-[12px_12px_40px_rgba(0,0,0,0.15),-8px_-8px_40px_rgba(255,255,255,0.1)]
+dark:shadow-[12px_12px_40px_rgba(0,0,0,0.5),-8px_-8px_40px_rgba(255,255,255,0.02)]
+border border-white/30 dark:border-white/10
 p-14
 text-center
 "
