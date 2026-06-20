@@ -86,7 +86,7 @@ export default function Page() {
 
                   <br />
 
-                  I'm
+                  I&#39;m
 
                   <span className="bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-500 bg-clip-text text-transparent">
 
@@ -600,13 +600,13 @@ text-center
 
             <h2 className="text-5xl font-black mb-5">
 
-              Let's Build Something Amazing
+              Let&#39;s Build Something Amazing
 
             </h2>
 
             <p className="text-zinc-500 text-lg max-w-xl mx-auto">
 
-              I'm always open to discussing new ideas,
+              I&#39;m always open to discussing new ideas,
               collaborations, and exciting opportunities.
 
             </p>
