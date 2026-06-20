@@ -13,25 +13,16 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
-import ProfileCard from "@/components/MyTiltAvatar";
-import GooeyNav from "@/components/ui/GooeyNav";
+import ProfilePhoto from "@/components/ProfilePhoto";
 import RotatingText from "@/components/RotatingText";
+
+import TechMarquee from "@/components/TechMarquee";
+
 
 const BLUR_FADE_DELAY = 0.04;
 
-const items = [
-  { label: "Home", href: "/" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Project", href: "/project" },
-];
-
 export default function Page() {
   const { theme } = useTheme();
-
-  const navColors =
-    theme === "dark"
-      ? [1, 2, 3, 1, 2, 3, 1, 4]
-      : [4, 4, 4, 4, 4, 4];
 
   return (
     <main className="relative w-full overflow-x-hidden bg-background text-foreground">
@@ -55,271 +46,288 @@ export default function Page() {
 
 
 
-      {/* NAVBAR */}
-      <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 px-4">
-        <motion.div
-          initial={{ y: -80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="
-            rounded-full
-            border border-zinc-200/50 dark:border-zinc-800/50
-            bg-white/60 dark:bg-zinc-900/50
-            backdrop-blur-2xl
-            shadow-[0_8px_40px_rgba(0,0,0,0.08)]
-            px-3 py-2
-          "
-        >
-          <GooeyNav
-            items={items}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
-            initialActiveIndex={0}
-            animationTime={600}
-            timeVariance={300}
-            colors={navColors}
-          />
-        </motion.div>
-      </div>
-
       {/* HERO */}
       <section
         id="hero"
-        className="
-          relative
-          min-h-screen
-          flex items-center
-          pt-32
-        "
+        className="relative min-h-screen flex items-center pt-32 pb-20 mt-12"
       >
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-16 w-full">
+        <div className="max-w-7xl mx-auto w-full px-6 lg:px-10">
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
 
             {/* LEFT */}
+
             <motion.div
-              initial={{ opacity: 0, y: 70 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="space-y-8 text-center lg:text-left"
+              transition={{ duration: .8 }}
+              className="space-y-8"
             >
 
-              <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 backdrop-blur-xl px-4 py-2 text-sm">
 
-                <div
-                  className="
-                    inline-flex items-center gap-2
-                    px-4 py-2 rounded-full
-                    border border-zinc-200 dark:border-zinc-800
-                    bg-white/50 dark:bg-zinc-900/50
-                    backdrop-blur-xl
-                    text-sm
-                  "
-                >
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  Available for work
-                </div>
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
 
-                <p className="text-zinc-500 dark:text-zinc-400 text-lg">
-                  Backend Developer • Laravel • Cyber Security
+                Available for Internship & Freelance
+
+              </div>
+
+              <div>
+
+                <p className="uppercase tracking-[0.3em] text-blue-500 font-medium text-sm mb-4">
+
+                  FRONTEND DEVELOPER
+
                 </p>
 
-              </div>
+                <h1 className="text-6xl lg:text-7xl font-black leading-none">
 
-              <div className="space-y-3">
+                  Hi,
 
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">
-                  Hi, I&apos;m
-                </h1>
+                  <br />
 
-                <h1
-                  className="
-                    text-6xl sm:text-7xl lg:text-8xl
-                    font-black tracking-tight leading-none
-                    bg-gradient-to-r
-                    from-blue-600
-                    via-violet-500
-                    to-cyan-400
-                    bg-clip-text text-transparent
-                  "
-                >
-                  {DATA.name.split(" ")[0]}
+                  I'm
+
+                  <span className="bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-500 bg-clip-text text-transparent">
+
+                    {" "}
+
+                    {DATA.name.split(" ")[0]}
+
+                  </span>
+
                 </h1>
 
               </div>
 
-              <p
-                className="
-                  text-zinc-600 dark:text-zinc-400
-                  text-lg md:text-xl
-                  leading-relaxed
-                  max-w-2xl
-                  mx-auto lg:mx-0
-                "
-              >
-                I build secure and scalable web applications using
-                Laravel & Next.js with a strong focus on backend
-                systems, APIs, and clean user experiences.
+              <p className="text-muted-foreground text-lg max-w-xl leading-8">
+
+                Passionate about building responsive and modern web applications
+                using Next.js and Tailwind CSS while continuously improving my
+                frontend development skills through real-world projects.
+
               </p>
 
-              <div
-                className="
-                  border-l-2 border-blue-500
-                  pl-5
-                  text-zinc-700 dark:text-zinc-300
-                  text-lg
-                "
-              >
-                Full-Stack Web Developer <br />
-                Networking & Cyber Security Enthusiast
-              </div>
-
-              {/* BUTTON */}
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <div className="flex flex-wrap gap-4">
 
                 <motion.a
-                  whileHover={{
-                    scale: 1.05,
-                    y: -5,
-                  }}
-                  whileTap={{ scale: 0.96 }}
+
+                  whileHover={{ scale: 1.04 }}
+
+                  whileTap={{ scale: .96 }}
+
                   href="/cv.pdf"
+
                   download
-                  className="
-                    px-7 py-3 rounded-full
-                    bg-blue-600 text-white font-semibold
-                    shadow-[0_10px_40px_rgba(37,99,235,0.35)]
-                    transition-all duration-300
-                  "
+
+                  className="rounded-full bg-blue-600 px-7 py-3 text-white font-semibold shadow-lg"
+
                 >
+
                   Download CV
+
                 </motion.a>
 
                 <motion.a
-                  whileHover={{
-                    scale: 1.05,
-                    y: -5,
-                  }}
-                  whileTap={{ scale: 0.96 }}
+
+                  whileHover={{ scale: 1.04 }}
+
+                  whileTap={{ scale: .96 }}
+
                   href="#projects"
-                  className="
-                    px-7 py-3 rounded-full
-                    border border-zinc-300 dark:border-zinc-700
-                    bg-white/40 dark:bg-zinc-900/40
-                    backdrop-blur-xl
-                    hover:bg-zinc-100 dark:hover:bg-zinc-800
-                    transition-all duration-300
-                  "
+
+                  className="rounded-full border border-border px-7 py-3 backdrop-blur-xl"
+
                 >
-                  See My Work
+
+                  View Projects
+
                 </motion.a>
 
               </div>
 
-              {/* ROTATING */}
-              <div className="pt-4 flex justify-center lg:justify-start">
+              <div className="grid grid-cols-3 gap-6 pt-6">
 
-                <RotatingText
-                  texts={[
-                    "FULLSTACK DEV",
-                    "PROBLEM SOLVER",
-                    "FAST LEARNER",
-                    "TEAM PLAYER",
-                  ]}
-                  mainClassName="
-                    px-6 py-3
-                    rounded-2xl
-                    bg-gradient-to-r from-blue-600 to-violet-600
-                    text-white font-bold
-                    shadow-[0_10px_40px_rgba(99,102,241,0.35)]
-                  "
-                  staggerFrom="last"
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  exit={{ y: "-120%" }}
-                  staggerDuration={0.025}
-                  splitLevelClassName="overflow-hidden"
-                  transition={{
-                    type: "spring",
-                    damping: 30,
-                    stiffness: 400,
-                  }}
-                  rotationInterval={2000}
-                />
+                <div>
+
+                  <h2 className="text-4xl font-black">
+
+                    4+
+
+                  </h2>
+
+                  <p className="text-sm text-muted-foreground">
+
+                    Projects
+
+                  </p>
+
+                </div>
+
+                <div>
+
+                  <h2 className="text-4xl font-black">
+
+                    10+
+
+                  </h2>
+
+                  <p className="text-sm text-muted-foreground">
+
+                    Technologies
+
+                  </p>
+
+                </div>
+
+                <div>
+
+                  <h2 className="text-4xl font-black">
+
+                    2+
+
+                  </h2>
+
+                  <p className="text-sm text-muted-foreground">
+
+                    Years Learning
+
+                  </p>
+
+                </div>
 
               </div>
+
+              <RotatingText
+                texts={[
+                  "NEXT.JS",
+                  "TAILWINDCSS",
+                  "RESPONSIVE UI",
+                  "FAST LEARNER",
+                ]}
+                mainClassName="
+          px-6 py-3 rounded-xl
+          bg-gradient-to-r from-blue-600 to-violet-600
+          text-white font-bold"
+                staggerFrom="last"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden"
+                transition={{
+                  type: "spring",
+                  damping: 30,
+                  stiffness: 400,
+                }}
+                rotationInterval={2000}
+              />
 
             </motion.div>
 
             {/* RIGHT */}
+
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: .9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              className="flex justify-center"
+              transition={{ duration: .8 }}
+              className="flex justify-center items-center"
             >
 
-              <div className="relative">
-
-                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
-
-                <ProfileCard
-                  name="Rifky Febrian"
-                  title="Software Engineer"
-                  handle="Rifky"
-                  status="Online"
-                  contactText="Contact Me"
-                  avatarUrl="./fabian.png"
-                  showUserInfo={true}
-                  enableTilt={true}
-                  enableMobileTilt={false}
-                  onContactClick={() =>
-                  (window.location.href =
-                    "mailto:febrianrfiky590@gmail.com")
-                  }
-                />
-
-              </div>
+              <ProfilePhoto
+                src="/sindoro.jpg"
+                alt="Rifky Febrian"
+                name="Rifky Febrian"
+                title="Frontend Developer"
+              />
 
             </motion.div>
 
           </div>
 
         </div>
+
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-32">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+      <section id="about" className="py-28">
 
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-10">
-              About Me
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="mb-14">
+
+            <span className="uppercase tracking-[0.3em] text-blue-500 text-sm font-semibold">
+              ABOUT ME
+            </span>
+
+            <h2 className="mt-3 text-5xl font-black">
+              Who Am I?
             </h2>
-          </BlurFade>
 
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <div
+            <div className="mt-4 h-[3px] w-24 rounded-full bg-gradient-to-r from-blue-500 to-violet-500" />
+
+          </div>
+
+          <motion.div
+            whileHover={{ y: -5 }}
+            className="
+      rounded-3xl
+      border
+      border-border
+      bg-background/60
+      backdrop-blur-xl
+      p-8
+      shadow-sm
+      max-w-3xl
+      "
+          >
+
+            <Markdown
               className="
-                rounded-[32px]
-                border border-zinc-200 dark:border-zinc-800
-                bg-white/50 dark:bg-zinc-900/40
-                backdrop-blur-2xl
-                p-8 md:p-10
-              "
+        prose
+        dark:prose-invert
+        max-w-none
+        leading-8
+        "
             >
-              <Markdown className="prose dark:prose-invert max-w-none">
-                {DATA.summary}
-              </Markdown>
-            </div>
-          </BlurFade>
+              {DATA.summary}
+            </Markdown>
+
+          </motion.div>
 
         </div>
+
       </section>
 
-      {/* EXPERIENCE */}
-      <section id="work" className="py-32">
+      {/* TECH STACK */}
+
+      <section id="skills" className="py-28">
+
+  <div className="max-w-7xl mx-auto px-6">
+
+    <div className="text-center mb-12">
+
+      <span className="uppercase tracking-[0.3em] text-blue-500 text-sm font-semibold">
+        TECH STACK
+      </span>
+
+      <h2 className="text-5xl font-black mt-3">
+        Technologies I Use
+      </h2>
+
+      <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+        Modern technologies and tools I use to build responsive and scalable web applications.
+      </p>
+
+    </div>
+
+    <TechMarquee />
+
+  </div>
+
+</section>
+
+  <section id="work" className="py-32">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-12">
@@ -369,9 +377,10 @@ export default function Page() {
         </div>
       </section>
 
+
       {/* EDUCATION */}
       <section id="education" className="py-32">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+        <div className="container mx-auto max-w-7xl px-6 lg:px-8">
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-12">
             Education
@@ -418,8 +427,8 @@ export default function Page() {
       </section>
 
       {/* SKILLS */}
-      <section id="skills" className="py-32">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-16">
+      <section id="skills-list" className="py-32">
+        <div className="container mx-auto max-w-7xl px-6 lg:px-8">
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-10">
             Skills
@@ -461,101 +470,341 @@ export default function Page() {
       </section>
 
       {/* PROJECTS */}
+
       <section id="projects" className="py-32">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
 
-          <div className="text-center mb-16">
+        <div className="max-w-7xl mx-auto px-6">
 
-            <h2 className="text-5xl font-black mb-4">
-              Featured Projects
+          <div className="mb-14">
+
+            <span className="text-blue-500 uppercase tracking-[0.3em] text-sm">
+              Projects
+            </span>
+
+            <h2 className="text-5xl font-black mt-2">
+              Featured Work
             </h2>
 
-            <p className="text-zinc-500 dark:text-zinc-400 text-lg">
-              Some projects I’ve worked on recently.
+            <p className="text-zinc-500 mt-3 max-w-xl">
+              A collection of projects that showcase my passion for building
+              modern, responsive, and user-friendly web applications.
             </p>
 
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
 
-            {DATA.projects.map((project) => (
-              <motion.div
+            {DATA.projects.map((project, id) => (
+
+              <BlurFade
                 key={project.title}
-                whileHover={{
-                  y: -10,
-                  scale: 1.02,
-                }}
-                transition={{
-                  duration: 0.3,
-                  type: "spring",
-                }}
+                delay={0.1 + id * 0.05}
               >
 
-                <ProjectCard
-                  href={project.href}
-                  title={project.title}
-                  description={project.description}
-                  dates={project.dates}
-                  tags={project.technologies}
-                  image={project.image}
-                  video={project.video}
-                  links={project.links}
-                />
+                <motion.div
 
-              </motion.div>
+                  whileHover={{
+                    y: -8,
+                    scale: 1.01
+                  }}
+
+                  transition={{
+                    type: "spring",
+                    stiffness: 200
+                  }}
+
+                  className="
+rounded-[28px]
+overflow-hidden
+border
+border-zinc-200
+dark:border-zinc-800
+bg-white/60
+dark:bg-zinc-900/40
+backdrop-blur-xl
+shadow-lg
+hover:shadow-2xl
+duration-300
+"
+                >
+
+                  <ProjectCard
+                    href={project.href}
+                    title={project.title}
+                    description={project.description}
+                    dates={project.dates}
+                    tags={project.technologies}
+                    image={project.image}
+                    video={project.video}
+                    links={project.links}
+                  />
+
+                </motion.div>
+
+              </BlurFade>
+
             ))}
 
           </div>
 
         </div>
+
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="py-32">
-        <div className="max-w-[900px] mx-auto px-6 lg:px-16 text-center">
+      <section
+        id="contact"
+        className="py-40"
+      >
 
-          <div
+        <div className="max-w-5xl mx-auto px-6">
+
+          <motion.div
+
+            initial={{
+              opacity: 0,
+              y: 50
+            }}
+
+            whileInView={{
+              opacity: 1,
+              y: 0
+            }}
+
+            viewport={{
+              once: true
+            }}
+
             className="
-              rounded-[40px]
-              border border-zinc-200 dark:border-zinc-800
-              bg-white/50 dark:bg-zinc-900/40
-              backdrop-blur-2xl
-              p-12
-            "
+rounded-[40px]
+border
+border-zinc-200
+dark:border-zinc-800
+bg-gradient-to-br
+from-blue-500/10
+to-violet-500/10
+backdrop-blur-xl
+p-14
+text-center
+"
           >
 
-            <h2 className="text-5xl font-black mb-6">
-              Let&apos;s Work Together
+            <h2 className="text-5xl font-black mb-5">
+
+              Let's Build Something Amazing
+
             </h2>
 
-            <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-10">
-              Interested in working together or have a project in mind?
+            <p className="text-zinc-500 text-lg max-w-xl mx-auto">
+
+              I'm always open to discussing new ideas,
+              collaborations, and exciting opportunities.
+
             </p>
 
-            <motion.div
-              whileHover={{
-                scale: 1.05,
-              }}
-              whileTap={{
-                scale: 0.95,
-              }}
-            >
-              <Link
-                href={DATA.contact.social.X.url}
-                className="
-                  inline-flex px-8 py-4 rounded-full
-                  bg-blue-600 text-white
-                  shadow-[0_10px_40px_rgba(37,99,235,0.35)]
-                "
-              >
-                Contact Me
-              </Link>
-            </motion.div>
+            <div className="flex flex-wrap justify-center gap-5 mt-10">
 
-          </div>
+              <Link
+
+                href={`mailto:${DATA.contact.email}`}
+
+                className="
+              px-8
+              py-4
+              rounded-full
+              bg-blue-600
+              text-white
+              font-semibold
+              hover:scale-105
+              duration-300
+"
+              >
+
+                Email Me
+
+              </Link>
+
+              <Link
+
+                href={DATA.contact.social.GitHub.url}
+
+                className="
+px-8
+py-4
+rounded-full
+border
+border-zinc-300
+dark:border-zinc-700
+hover:bg-zinc-100
+dark:hover:bg-zinc-800
+duration-300
+"
+              >
+
+                Github
+
+              </Link>
+
+              <Link
+
+                href={DATA.contact.social.LinkedIn.url}
+
+                className="
+px-8
+py-4
+rounded-full
+border
+border-zinc-300
+dark:border-zinc-700
+hover:bg-zinc-100
+dark:hover:bg-zinc-800
+duration-300
+"
+              >
+
+                LinkedIn
+
+              </Link>
+
+            </div>
+
+          </motion.div>
 
         </div>
+
       </section>
+
+      {/* FOOTER */}
+      <footer className="relative border-t border-border bg-background/50 backdrop-blur-sm py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            {/* Branding */}
+            <div className="space-y-4">
+              <Link href="/" className="flex items-center gap-2 group">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-white font-bold text-lg">
+                  RF
+                </div>
+                <span className="font-semibold text-foreground">Rifky</span>
+              </Link>
+              <p className="text-sm text-muted-foreground">
+                Full-stack web developer with a passion for modern, responsive design and clean code.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Navigation</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/gallery"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Gallery
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/project"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Project
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Sections */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Sections</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="#about"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#projects"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#skills"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Skills
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contact & Social */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Connect</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    href={`mailto:${DATA.contact.email}`}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Email
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={DATA.contact.social.GitHub.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    GitHub
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={DATA.contact.social.LinkedIn.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} Rifky Febrian. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6">
+              <a
+                href="#hero"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Back to Top
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
     </main>
   );

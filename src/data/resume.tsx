@@ -17,7 +17,7 @@ I build full-stack web applications using Laravel and Next.js, including REST AP
 I also have experience in networking and cyber security fundamentals, including Linux usage and basic Capture The Flag (CTF) challenges.
 `,
 
-  avatarUrl: "/fabian.png",
+  avatarUrl: "/sindoro.jpg",
   skills: [
     "Backend: Laravel (PHP), REST API",
     "Frontend: Next.js, TypeScript, TailwindCSS",

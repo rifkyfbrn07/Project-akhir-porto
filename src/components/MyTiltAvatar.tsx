@@ -23,7 +23,8 @@ interface ProfileCardProps {
   onContactClick?: () => void;
 }
 
-const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)';
+const DEFAULT_INNER_GRADIENT =
+  "linear-gradient(145deg,#0f172a 0%,#1e3a8a 45%,#2563eb 100%)";
 
 const ANIMATION_CONFIG = {
   INITIAL_DURATION: 1200,
@@ -43,19 +44,19 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   iconUrl = '<Placeholder for icon URL>',
   grainUrl = '<Placeholder for grain URL>',
   innerGradient,
-  behindGlowEnabled = true,
+  behindGlowEnabled = false,
   behindGlowColor,
   behindGlowSize,
   className = '',
-  enableTilt = true,
+  enableTilt = false,
   enableMobileTilt = false,
   mobileTiltSensitivity = 5,
   miniAvatarUrl,
   name = 'Rifky Febrian',
-  title = 'Software Engineer',
-  handle = 'Fabian',
-  status = 'Online',
-  contactText = 'Contact',
+  title = 'Web Developer',
+  handle = 'Rifkyfbrn',
+  status = 'Available for Internship',
+  contactText = 'Let\'s Talk',
   showUserInfo = true,
   onContactClick
 }) => {
@@ -313,16 +314,24 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   ]);
 
   const cardStyle = useMemo(
-  () =>
-    ({
-      '--icon': iconUrl ? `url(${iconUrl})` : 'none',
-      '--grain': grainUrl ? `url(${grainUrl})` : 'none',
-      '--inner-gradient': innerGradient ?? 'linear-gradient(145deg, #2a2a2a, #1a1a1a)',
-      '--behind-glow-color': behindGlowColor ?? 'rgba(90, 180, 255, 0.25)', // lebih soft
-      '--behind-glow-size': behindGlowSize ?? '35%' // lebih kecil biar elegan
-    }) as React.CSSProperties,
-  [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize]
-);
+    () =>
+      ({
+        '--icon': iconUrl ? `url(${iconUrl})` : 'none',
+        '--grain': grainUrl ? `url(${grainUrl})` : 'none',
+        '--inner-gradient':
+          innerGradient ??
+          'linear-gradient(145deg,#0f172a,#1e293b,#1d4ed8)',
+
+        '--behind-glow-color':
+          behindGlowColor ??
+          'rgba(59,130,246,.15)',
+
+        '--behind-glow-size':
+          behindGlowSize ??
+          '20%',
+      }) as React.CSSProperties,
+    [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize]
+  );
 
 
   const handleContactClick = useCallback(() => {
@@ -338,6 +347,21 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             <div className="pc-shine" />
             <div className="pc-glare" />
             <div className="pc-content pc-avatar-content">
+              <div
+                style={{
+                  position: "absolute",
+                  width: "260px",
+                  height: "260px",
+                  borderRadius: "9999px",
+                  background:
+                    "radial-gradient(circle,#3b82f680 0%,transparent 70%)",
+                  filter: "blur(60px)",
+                  left: "50%",
+                  top: "38%",
+                  transform: "translate(-50%,-50%)",
+                  zIndex: 0,
+                }}
+              />
               <img
                 className="avatar"
                 src={avatarUrl}
@@ -382,8 +406,28 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             </div>
             <div className="pc-content">
               <div className="pc-details">
+
+                <span
+                  style={{
+                    width: "fit-content",
+                    margin: "0 auto 12px",
+                    padding: "6px 14px",
+                    borderRadius: "999px",
+                    background: "rgba(59,130,246,.15)",
+                    color: "#60a5fa",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    letterSpacing: ".12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Frontend Developer
+                </span>
+
                 <h3>{name}</h3>
+
                 <p>{title}</p>
+
               </div>
             </div>
           </div>
