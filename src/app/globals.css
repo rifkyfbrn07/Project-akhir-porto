@@ -22,6 +22,13 @@ html.intro-active, html.intro-active body { overflow: hidden; }
 .intro-skip:hover { border-color: #4389ff; }
 .intro-panels { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); pointer-events: none; }
 .intro-panels span { background: #071426; border-right: 1px solid #112745; }
+.project-select-card.is-dimmed { opacity: .68; }
+.project-select-image { filter: grayscale(1) brightness(.78) saturate(.72); transform: scale(1.01); }
+.project-select-image.is-active { filter: grayscale(0) brightness(1) saturate(1); transform: scale(1.055); }
+.project-select-card:not(.is-dimmed) .project-select-image.is-active { will-change: filter, transform; }
+@media (prefers-reduced-motion: reduce) {
+  .project-select-card, .project-select-image, .project-select-description { transition-duration: .01ms !important; }
+}
 @media (max-width: 640px) { .intro-panels { grid-template-columns: repeat(2, 1fr); } .intro-index, .intro-foot { font-size: 8px; } .intro-signal { width: 70%; } }
 
 @layer base {

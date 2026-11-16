@@ -35,96 +35,7 @@ export default function Page() {
   const [activeProjectCategory, setActiveProjectCategory] =
     useState("All Projects");
   const projectSectionRef = useRef<HTMLElement | null>(null);
-  const previewRef = useRef<HTMLDivElement | null>(null);
   const caseStudyRefs = useRef<Record<number, HTMLDivElement | null>>({});
-  const previewXQuick = useRef<((value: number) => void) | null>(null);
-  const previewYQuick = useRef<((value: number) => void) | null>(null);
-  const previewRotateQuick = useRef<((value: number) => void) | null>(null);
-
-  useEffect(() => {
-    if (!previewRef.current || reduceMotion) return;
-
-    previewXQuick.current = gsap.quickTo(previewRef.current, "x", {
-      duration: 0.75,
-      ease: "power3.out",
-    });
-
-    previewYQuick.current = gsap.quickTo(previewRef.current, "y", {
-      duration: 0.75,
-      ease: "power3.out",
-    });
-
-    previewRotateQuick.current = gsap.quickTo(previewRef.current, "rotationY", {
-      duration: 0.75,
-      ease: "power3.out",
-    });
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    const section = projectSectionRef.current;
-
-    if (!section || !previewRef.current || reduceMotion) {
-      return;
-    }
-
-    const handlePointerMove = (event: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      const relativeX = (event.clientX - rect.left - rect.width * 0.38) * 0.08;
-      const targetY = event.clientY - rect.top - 180;
-      const targetRotate = (event.clientX - rect.left - rect.width * 0.5) * 0.04;
-
-      if (previewXQuick.current) {
-        previewXQuick.current(relativeX);
-      }
-
-      if (previewYQuick.current) {
-        previewYQuick.current(targetY);
-      }
-
-      if (previewRotateQuick.current) {
-        previewRotateQuick.current(targetRotate);
-      }
-    };
-
-    const handlePointerLeave = () => {
-      gsap.to(previewRef.current, {
-        opacity: 0,
-        scale: 0.92,
-        y: 24,
-        x: 0,
-        rotationY: 0,
-        clipPath: "inset(9% 0% 9% 0% round 1.75rem)",
-        duration: 0.35,
-        ease: "power3.inOut",
-      });
-      setHoveredProject(null);
-    };
-
-    section.addEventListener("mousemove", handlePointerMove);
-    section.addEventListener("mouseleave", handlePointerLeave);
-
-    return () => {
-      section.removeEventListener("mousemove", handlePointerMove);
-      section.removeEventListener("mouseleave", handlePointerLeave);
-    };
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    if (!previewRef.current) return;
-
-    const isVisible = hoveredProject !== null && expandedProject === null;
-    gsap.to(previewRef.current, {
-      opacity: isVisible ? 1 : 0,
-      scale: isVisible ? 1 : 0.92,
-      y: isVisible ? 0 : 24,
-      x: 0,
-      rotationY: 0,
-      clipPath: isVisible ? "inset(0% 0% 0% 0% round 1.75rem)" : "inset(9% 0% 9% 0% round 1.75rem)",
-      duration: 0.35,
-      ease: "power3.out",
-      overwrite: true,
-    });
-  }, [hoveredProject, expandedProject]);
 
   useEffect(() => {
     if (expandedProject === null || reduceMotion) return;
@@ -255,8 +166,6 @@ export default function Page() {
       skills: ["Git", "GitHub", "Vercel", "Postman", "VS Code"],
     },
   ];
-
-  const previewProjectIndex = expandedProject === null ? hoveredProject : null;
 
   const formatProjectDescription = (description: string) =>
     description.replace(/\s*\n\s*/g, " ").replace(/\s{2,}/g, " ").trim();
@@ -683,338 +592,128 @@ export default function Page() {
               ))}
             </div>
 
-            <div className="grid md:grid-cols-[0.9fr_1.1fr] md:gap-12 lg:gap-16">
-              <div className="relative z-10 space-y-3 md:pr-6">
-                {visibleProjects.map((project, idx) => {
-                  const isActive = hoveredProject === idx || expandedProject === idx;
-                  const isExpanded = expandedProject === idx;
-                  const caseStudy = project.caseStudy;
-                  const isComingSoon = project.status === "Coming Soon";
-                  const projectYear = caseStudy?.year || project.dates;
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {visibleProjects.map((project, idx) => {
+                const selectedProject = hoveredProject ?? expandedProject;
+                const isActive = selectedProject === idx;
+                const isDimmed = selectedProject !== null && selectedProject !== idx;
+                const isExpanded = expandedProject === idx;
+                const caseStudy = project.caseStudy;
+                const isComingSoon = project.status === "Coming Soon";
+                const projectYear = caseStudy?.year || project.dates;
 
-                  return (
-                    <div key={project.title} className="relative">
-                      <motion.button
-                        type="button"
-                        aria-expanded={isExpanded}
-                        aria-controls={isExpanded ? `case-study-${idx}` : undefined}
-                        aria-label={`${isExpanded ? "Close" : "View"} ${project.title} project details`}
-                        onMouseEnter={() => {
-                          if (!reduceMotion && expandedProject === null) {
-                            setHoveredProject(idx);
+                return (
+                  <div key={project.title} className={`project-select-card relative min-w-0 transition-all duration-500 ${isExpanded ? "sm:col-span-2 xl:col-span-3" : ""} ${isDimmed ? "is-dimmed" : "opacity-100"}`}>
+                    <motion.button
+                      type="button"
+                      aria-expanded={isExpanded}
+                      aria-controls={isExpanded ? `case-study-${idx}` : undefined}
+                      aria-label={`${isExpanded ? "Close" : "View"} ${project.title} project details`}
+                      onPointerEnter={(event) => {
+                        if (event.pointerType !== "touch" && expandedProject === null) setHoveredProject(idx);
+                      }}
+                      onPointerLeave={() => {
+                        if (expandedProject === null) setHoveredProject((current) => current === idx ? null : current);
+                      }}
+                      onFocus={() => {
+                        if (expandedProject === null) setHoveredProject(idx);
+                      }}
+                      onBlur={(event) => {
+                        if (expandedProject === null && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                          setHoveredProject((current) => current === idx ? null : current);
+                        }
+                      }}
+                      onKeyDown={(event) => {
+                        const next = event.key === "ArrowRight" || event.key === "ArrowDown" ? idx + 1
+                          : event.key === "ArrowLeft" || event.key === "ArrowUp" ? idx - 1 : -1;
+                        if (next >= 0 && next < visibleProjects.length) {
+                          event.preventDefault();
+                          document.getElementById(`project-row-${next}`)?.focus();
+                        }
+                      }}
+                      onClick={() => {
+                        setExpandedProject((current) => current === idx ? null : idx);
+                        setHoveredProject(null);
+                        if (expandedProject !== idx && projectSectionRef.current) {
+                          const row = document.getElementById(`project-row-${idx}`);
+                          if (row) {
+                            const offset = row.getBoundingClientRect().top - projectSectionRef.current.getBoundingClientRect().top - 100;
+                            if (offset > 0) window.scrollTo({ top: window.scrollY + offset, behavior: reduceMotion ? "auto" : "smooth" });
                           }
-                        }}
-                        onMouseLeave={() => {
-                          if (expandedProject === null) {
-                            setHoveredProject((current) => (current === idx ? null : current));
-                          }
-                        }}
-                        onClick={() => {
-                          setExpandedProject((current) => (current === idx ? null : idx));
-                          setHoveredProject(null);
-
-                          if (expandedProject !== idx && projectSectionRef.current) {
-                            const row = document.getElementById(`project-row-${idx}`);
-                            if (row) {
-                              const rect = row.getBoundingClientRect();
-                              const sectionRect = projectSectionRef.current.getBoundingClientRect();
-                              const offset = rect.top - sectionRect.top - 100;
-                              if (offset > 0) {
-                                window.scrollTo({
-                                  top: window.scrollY + offset,
-                                  behavior: reduceMotion ? "auto" : "smooth",
-                                });
-                              }
-                            }
-                          }
-                        }}
-                        id={`project-row-${idx}`}
-                        initial={reduceMotion ? false : { opacity: 0, x: -16 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.45, delay: idx * 0.04 }}
-                        className={`group flex w-full items-center gap-4 rounded-2xl border px-4 py-4 text-left transition-all duration-300 md:px-5 ${
-                          isActive
-                            ? "border-blue-200 bg-blue-50/70 shadow-[0_12px_30px_rgba(37,99,235,0.08)]"
-                            : "border-transparent bg-transparent hover:border-slate-200 hover:bg-slate-50/70"
-                        }`}
-                        style={{
-                          boxShadow: isActive ? "0 12px 30px rgba(37,99,235,0.08)" : "none",
-                        }}
-                      >
-                        <span className="min-w-[3rem] text-xs font-bold uppercase tracking-[0.28em] text-blue-600">
-                          {String(idx + 1).padStart(2, "0")}
-                        </span>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-4">
-                            <span className="block text-xl font-black tracking-[-0.04em] text-slate-900 transition-colors duration-200 group-hover:text-blue-600">
-                              {project.title}
-                              {isComingSoon && (
-                                <span className="ml-3 align-middle text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                  Coming Soon
-                                </span>
-                              )}
-                            </span>
-                            <ArrowUpRight className="h-4 w-4 text-slate-400 transition-all duration-200 group-hover:text-blue-600 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                          </div>
-                          <p className="mt-1 text-xs text-slate-500">
-                            {getProjectCategory(project)}
-                            {project.role ? ` · ${project.role}` : ""}
-                          </p>
-                        </div>
-                      </motion.button>
-
-                      {isExpanded && (
-                        <div
-                          id={`case-study-${idx}`}
-                          ref={(element) => {
-                            if (element) {
-                              caseStudyRefs.current[idx] = element;
-                            }
-                          }}
-                          role="region"
-                          aria-labelledby={`project-row-${idx}`}
-                          className="mt-3 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white/90 shadow-[0_18px_40px_rgba(15,23,42,0.06)]"
-                        >
-                          <div className="border-b border-slate-200 px-4 py-3 md:px-5">
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
-                                {isComingSoon
-                                  ? "Coming Soon"
-                                  : getProjectCategory(project)}
-                              </span>
-                              {projectYear && (
-                                <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-blue-600">
-                                  {projectYear}
-                                </span>
-                              )}
-                            </div>
-                            {(project.projectType || project.role) && (
-                              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                                {project.projectType && (
-                                  <span>Type: {project.projectType}</span>
-                                )}
-                                {project.role && <span>Role: {project.role}</span>}
-                              </div>
-                            )}
-                          </div>
-
-                          {isComingSoon ? (
-                            <p className="p-5 text-sm leading-relaxed text-slate-600">
-                              Project details will be added when source code and approved assets are available.
-                            </p>
-                          ) : (
-                            <div className="space-y-6 p-4 md:p-6">
-                              {project.image ? (
-                                <div data-case-panel className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100">
-                                  <div data-case-image className="relative aspect-[16/10] overflow-hidden">
-                                    <Image
-                                      src={project.image}
-                                      alt={`${project.title} project screenshot`}
-                                      fill
-                                      sizes="(max-width: 768px) 100vw, 45vw"
-                                      className="h-full w-full object-cover"
-                                    />
-                                  </div>
-                                </div>
-                              ) : (
-                                <p className="text-xs text-slate-500">
-                                  No verified project screenshots are available in the current portfolio assets.
-                                </p>
-                              )}
-
-                              {caseStudy?.gallery?.map((image) => (
-                                <figure
-                                  key={image.src}
-                                  data-case-panel
-                                  className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100"
-                                >
-                                  <div className="relative aspect-[16/10]">
-                                    <Image
-                                      src={image.src}
-                                      alt={image.alt}
-                                      fill
-                                      sizes="(max-width: 768px) 100vw, 45vw"
-                                      className="object-cover"
-                                    />
-                                  </div>
-                                </figure>
-                              ))}
-
-                              <div data-case-panel className="space-y-3">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-blue-600">Project Overview</p>
-                                <h3 className="text-2xl font-black tracking-[-0.05em] text-slate-900 md:text-3xl">{project.title}</h3>
-                                <p className="text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy?.overview ?? project.description}</p>
-                              </div>
-
-                              <div data-case-panel className="grid gap-6 md:grid-cols-2">
-                                {caseStudy?.problemStatement && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Problem Statement</p>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.problemStatement}</p>
-                                  </div>
-                                )}
-                                {caseStudy?.proposedSolution && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Proposed Solution</p>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.proposedSolution}</p>
-                                  </div>
-                                )}
-                                {caseStudy?.role && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Role</p>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.role}</p>
-                                  </div>
-                                )}
-                                {caseStudy?.myRole && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">My Role</p>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.myRole}</p>
-                                  </div>
-                                )}
-                              </div>
-
-                              {caseStudy?.developmentProcess && (
-                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Development Process</p>
-                                  <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.developmentProcess}</p>
-                                </div>
-                              )}
-
-                              <div data-case-panel className="space-y-4 rounded-[1.2rem] border border-slate-200 bg-white p-4 md:p-5">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Technology Stack</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {project.technologies.map((tech) => (
-                                    <span key={tech} className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1.5 text-[11px] font-medium text-slate-700">
-                                      {tech}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              <div data-case-panel className="grid gap-6 md:grid-cols-2">
-                                {caseStudy?.features && caseStudy.features.length > 0 && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Key Features</p>
-                                    <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">
-                                      {caseStudy.features.map((feature) => (
-                                        <li key={feature} className="flex gap-2">
-                                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
-                                          <span>{feature}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-
-                                {caseStudy?.whatBuilt && caseStudy.whatBuilt.length > 0 && (
-                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">What I Built</p>
-                                    <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">
-                                      {caseStudy.whatBuilt.map((item) => (
-                                        <li key={item} className="flex gap-2">
-                                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
-                                          <span>{item}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-
-                              {caseStudy?.challenges && (
-                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Challenges</p>
-                                  <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.challenges}</p>
-                                </div>
-                              )}
-
-                              {caseStudy?.details && caseStudy.details.length > 0 && (
-                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
-                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Details</p>
-                                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                                    {caseStudy.details.map((detail) => (
-                                      <div key={detail.label} className="rounded-xl border border-slate-200 bg-white p-3">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500">{detail.label}</p>
-                                        <p className="mt-2 text-sm font-medium text-slate-800">{detail.value}</p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-
-                              <div data-case-panel className="flex flex-wrap gap-3 pt-2">
-                                {project.links.map((link) => (
-                                  <a
-                                    key={link.type}
-                                    href={link.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-blue-600"
-                                  >
-                                    {link.type}
-                                    <ArrowUpRight className="h-3.5 w-3.5" />
-                                  </a>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="relative hidden min-h-[560px] md:block">
-                <div className="pointer-events-none sticky top-28 z-20 h-[540px] w-[min(38vw,540px)] max-w-full overflow-hidden">
-                  <div
-                    ref={previewRef}
-                    className="absolute left-0 top-0 h-full w-full rounded-[2rem] border border-slate-200 bg-white/80 opacity-0 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-md"
-                    style={{
-                      clipPath: "inset(9% 0% 9% 0% round 1.75rem)",
-                      transform: "translate3d(0,0,0) perspective(1200px)",
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    {previewProjectIndex !== null && (
-                      <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-slate-50">
-                      {visibleProjects[previewProjectIndex].image ? (
-                        <div className="relative aspect-[16/11] overflow-hidden">
+                        }
+                      }}
+                      id={`project-row-${idx}`}
+                      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: reduceMotion ? 0 : 0.48, delay: reduceMotion ? 0 : idx * 0.035 }}
+                      className={`group w-full overflow-hidden rounded-2xl border text-left transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600 ${isActive ? "border-blue-500 bg-white shadow-[0_20px_48px_rgba(37,99,235,0.13)]" : "border-slate-200/80 bg-white/70 hover:border-blue-300"}`}
+                    >
+                      <span className="relative block aspect-[16/10] overflow-hidden bg-slate-200">
+                        {project.image ? (
                           <Image
-                            src={visibleProjects[previewProjectIndex].image}
-                            alt={`${visibleProjects[previewProjectIndex].title} project preview`}
+                            src={project.image}
+                            alt={`${project.title} interface preview`}
                             fill
-                            sizes="(max-width: 768px) 100vw, 38vw"
-                            className="h-full w-full object-cover"
-                            priority={false}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1279px) 50vw, 33vw"
+                            className={`project-select-image object-cover transition-all ${reduceMotion ? "duration-0" : "duration-700"} ${isActive ? "is-active" : ""}`}
                           />
-                        </div>
-                      ) : (
-                        <div className="flex aspect-[16/11] items-end border-b border-slate-200 bg-slate-100 p-6">
-                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                            {visibleProjects[previewProjectIndex].status ?? "Project overview"}
-                          </p>
-                        </div>
-                      )}
+                        ) : (
+                          <span className="project-coming-visual absolute inset-0 grid place-items-center bg-slate-950 text-white">
+                            <span className="text-center"><span className="block text-xs font-bold uppercase tracking-[0.32em] text-blue-300">In development</span><span className="mt-3 block text-3xl font-black tracking-[-0.06em]">RF / NEXT</span></span>
+                          </span>
+                        )}
+                        <span className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/0 to-slate-950/5" />
+                        <span className="absolute left-4 top-4 rounded-full border border-white/25 bg-slate-950/55 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-white backdrop-blur-sm">{String(idx + 1).padStart(2, "0")} / {String(visibleProjects.length).padStart(2, "0")}</span>
+                        <span className={`absolute bottom-4 right-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 ${isActive ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"}`}>View project <ArrowUpRight className="h-4 w-4" /></span>
+                      </span>
+                      <span className="block p-4 md:p-5">
+                        <span className="flex items-start justify-between gap-3">
+                          <span className={`text-lg font-black tracking-[-0.04em] transition-colors duration-300 md:text-xl ${isActive ? "text-blue-700" : "text-slate-900"}`}>{project.title}</span>
+                          <span className={`mt-1 text-xs font-bold uppercase tracking-[0.22em] transition-colors ${isActive ? "text-blue-600" : "text-slate-400"}`}>{projectYear ?? "—"}</span>
+                        </span>
+                        <span className="mt-1 block text-xs text-slate-500">{getProjectCategory(project)}{project.role ? ` · ${project.role}` : ""}</span>
+                        <span className={`project-select-description block overflow-hidden text-sm leading-relaxed text-slate-600 transition-all duration-300 ${isActive ? "mt-3 max-h-24 translate-y-0 opacity-100" : "mt-0 max-h-0 translate-y-1 opacity-0"}`}>{isComingSoon ? "Details will be added when the project is ready to share." : formatProjectDescription(project.description)}</span>
+                      </span>
+                    </motion.button>
 
-                      <div className="space-y-4 p-6">
-                        <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-600">Preview</p>
-                        <h3 className="text-2xl font-black tracking-[-0.05em] text-slate-900">
-                          {visibleProjects[previewProjectIndex].title}
-                        </h3>
-                        <p className="text-sm leading-relaxed text-slate-600">
-                          {visibleProjects[previewProjectIndex].description
-                            ? formatProjectDescription(visibleProjects[previewProjectIndex].description)
-                            : "Project details will be added when source code and approved assets are available."}
-                        </p>
+                    {isExpanded && (
+                      <div
+                        id={`case-study-${idx}`}
+                        ref={(element) => { if (element) caseStudyRefs.current[idx] = element; }}
+                        role="region"
+                        aria-labelledby={`project-row-${idx}`}
+                        className="mt-3 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white/90 shadow-[0_18px_40px_rgba(15,23,42,0.06)]"
+                      >
+                        <div className="border-b border-slate-200 px-4 py-3 md:px-5">
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">{isComingSoon ? "Coming Soon" : getProjectCategory(project)}</span>
+                            {projectYear && <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-blue-600">{projectYear}</span>}
+                          </div>
+                          {(project.projectType || project.role) && <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">{project.projectType && <span>Type: {project.projectType}</span>}{project.role && <span>Role: {project.role}</span>}</div>}
                         </div>
+
+                        {isComingSoon ? (
+                          <p className="p-5 text-sm leading-relaxed text-slate-600">Project details will be added when source code and approved assets are available.</p>
+                        ) : (
+                          <div className="space-y-6 p-4 md:p-6">
+                            {project.image ? <div data-case-panel className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100"><div data-case-image className="relative aspect-[16/10] overflow-hidden"><Image src={project.image} alt={`${project.title} project screenshot`} fill sizes="(max-width: 768px) 100vw, 45vw" className="h-full w-full object-cover" /></div></div> : <p className="text-xs text-slate-500">No verified project screenshots are available in the current portfolio assets.</p>}
+                            {caseStudy?.gallery?.map((image) => <figure key={image.src} data-case-panel className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100"><div className="relative aspect-[16/10]"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 768px) 100vw, 45vw" className="object-cover" /></div></figure>)}
+                            <div data-case-panel className="space-y-3"><p className="text-[10px] font-bold uppercase tracking-[0.32em] text-blue-600">Project Overview</p><h3 className="text-2xl font-black tracking-[-0.05em] text-slate-900 md:text-3xl">{project.title}</h3><p className="text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy?.overview ?? project.description}</p></div>
+                            <div data-case-panel className="grid gap-6 md:grid-cols-2">{caseStudy?.problemStatement && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Problem Statement</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.problemStatement}</p></div>}{caseStudy?.proposedSolution && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Proposed Solution</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.proposedSolution}</p></div>}{caseStudy?.role && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Role</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.role}</p></div>}{caseStudy?.myRole && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">My Role</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.myRole}</p></div>}</div>
+                            {caseStudy?.developmentProcess && <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Development Process</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.developmentProcess}</p></div>}
+                            <div data-case-panel className="space-y-4 rounded-[1.2rem] border border-slate-200 bg-white p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Technology Stack</p><div className="flex flex-wrap gap-2">{project.technologies.map((tech) => <span key={tech} className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1.5 text-[11px] font-medium text-slate-700">{tech}</span>)}</div></div>
+                            <div data-case-panel className="grid gap-6 md:grid-cols-2">{caseStudy?.features && caseStudy.features.length > 0 && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Key Features</p><ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.features.map((feature) => <li key={feature} className="flex gap-2"><span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" /><span>{feature}</span></li>)}</ul></div>}{caseStudy?.whatBuilt && caseStudy.whatBuilt.length > 0 && <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">What I Built</p><ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.whatBuilt.map((item) => <li key={item} className="flex gap-2"><span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" /><span>{item}</span></li>)}</ul></div>}</div>
+                            {caseStudy?.challenges && <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Challenges</p><p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.challenges}</p></div>}
+                            {caseStudy?.details && caseStudy.details.length > 0 && <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5"><p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Details</p><div className="mt-4 grid gap-3 sm:grid-cols-3">{caseStudy.details.map((detail) => <div key={detail.label} className="rounded-xl border border-slate-200 bg-white p-3"><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500">{detail.label}</p><p className="mt-2 text-sm font-medium text-slate-800">{detail.value}</p></div>)}</div></div>}
+                            <div data-case-panel className="flex flex-wrap gap-3 pt-2">{project.links.map((link) => <a key={link.type} href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-blue-600">{link.type}<ArrowUpRight className="h-3.5 w-3.5" /></a>)}</div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </section>
