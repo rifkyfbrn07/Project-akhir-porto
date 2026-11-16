@@ -1,972 +1,1258 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import gsap from "gsap";
+import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import {
-  ArrowDown,
   ArrowUpRight,
-  Code2,
-  Database,
   Github,
   Instagram,
   Linkedin,
   Mail,
-  MapPin,
-  Server,
-  Shield,
-  Sparkles,
-  Terminal,
-  Wrench,
 } from "lucide-react";
 import { DATA } from "@/data/resume";
+import { FEATURED_PROJECTS } from "@/data/featured-projects";
+import type { PortfolioProject } from "@/data/project-types";
+import NavbarLiquid from "@/components/navbar-liquid";
 
 interface ExperienceItem {
-  type: "work" | "education";
   title: string;
   role: string;
   period: string;
   description: string;
   logoUrl?: string;
   href?: string;
-  location: string;
+  location?: string;
+  division?: string;
+  status?: string;
 }
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
-
 export default function Page() {
-  const allExperiences: ExperienceItem[] = [
-    ...DATA.work.map((item) => ({
-      type: "work" as const,
+  const reduceMotion = useReducedMotion();
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [expandedProject, setExpandedProject] = useState<number | null>(null);
+  const [activeProjectCategory, setActiveProjectCategory] =
+    useState("All Projects");
+  const projectSectionRef = useRef<HTMLElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  const caseStudyRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const previewXQuick = useRef<((value: number) => void) | null>(null);
+  const previewYQuick = useRef<((value: number) => void) | null>(null);
+  const previewRotateQuick = useRef<((value: number) => void) | null>(null);
+
+  useEffect(() => {
+    if (!previewRef.current || reduceMotion) return;
+
+    previewXQuick.current = gsap.quickTo(previewRef.current, "x", {
+      duration: 0.75,
+      ease: "power3.out",
+    });
+
+    previewYQuick.current = gsap.quickTo(previewRef.current, "y", {
+      duration: 0.75,
+      ease: "power3.out",
+    });
+
+    previewRotateQuick.current = gsap.quickTo(previewRef.current, "rotationY", {
+      duration: 0.75,
+      ease: "power3.out",
+    });
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    const section = projectSectionRef.current;
+
+    if (!section || !previewRef.current || reduceMotion) {
+      return;
+    }
+
+    const handlePointerMove = (event: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      const relativeX = (event.clientX - rect.left - rect.width * 0.38) * 0.08;
+      const targetY = event.clientY - rect.top - 180;
+      const targetRotate = (event.clientX - rect.left - rect.width * 0.5) * 0.04;
+
+      if (previewXQuick.current) {
+        previewXQuick.current(relativeX);
+      }
+
+      if (previewYQuick.current) {
+        previewYQuick.current(targetY);
+      }
+
+      if (previewRotateQuick.current) {
+        previewRotateQuick.current(targetRotate);
+      }
+    };
+
+    const handlePointerLeave = () => {
+      gsap.to(previewRef.current, {
+        opacity: 0,
+        scale: 0.92,
+        y: 24,
+        x: 0,
+        rotationY: 0,
+        clipPath: "inset(9% 0% 9% 0% round 1.75rem)",
+        duration: 0.35,
+        ease: "power3.inOut",
+      });
+      setHoveredProject(null);
+    };
+
+    section.addEventListener("mousemove", handlePointerMove);
+    section.addEventListener("mouseleave", handlePointerLeave);
+
+    return () => {
+      section.removeEventListener("mousemove", handlePointerMove);
+      section.removeEventListener("mouseleave", handlePointerLeave);
+    };
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (!previewRef.current) return;
+
+    const isVisible = hoveredProject !== null && expandedProject === null;
+    gsap.to(previewRef.current, {
+      opacity: isVisible ? 1 : 0,
+      scale: isVisible ? 1 : 0.92,
+      y: isVisible ? 0 : 24,
+      x: 0,
+      rotationY: 0,
+      clipPath: isVisible ? "inset(0% 0% 0% 0% round 1.75rem)" : "inset(9% 0% 9% 0% round 1.75rem)",
+      duration: 0.35,
+      ease: "power3.out",
+      overwrite: true,
+    });
+  }, [hoveredProject, expandedProject]);
+
+  useEffect(() => {
+    if (expandedProject === null || reduceMotion) return;
+
+    const element = caseStudyRefs.current[expandedProject];
+    if (!element) return;
+
+    const panels = element.querySelectorAll("[data-case-panel]") as NodeListOf<HTMLElement>;
+    const image = element.querySelector("[data-case-image]") as HTMLElement | null;
+
+    gsap.fromTo(
+      element,
+      { height: 0, opacity: 0, y: 20, clipPath: "inset(0 0 100% 0 round 1.4rem)" },
+      {
+        height: "auto",
+        opacity: 1,
+        y: 0,
+        clipPath: "inset(0 0 0 0 round 1.4rem)",
+        duration: 0.7,
+        ease: "power3.out",
+        overwrite: true,
+      }
+    );
+
+    if (panels.length) {
+      gsap.fromTo(
+        panels,
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.06,
+          overwrite: true,
+        }
+      );
+    }
+
+    if (image) {
+      gsap.fromTo(
+        image,
+        { scale: 1.08, opacity: 0, clipPath: "inset(12% 0 12% 0 round 1.5rem)" },
+        {
+          scale: 1,
+          opacity: 1,
+          clipPath: "inset(0% 0 0% 0 round 1.5rem)",
+          duration: 0.9,
+          ease: "power3.out",
+          overwrite: true,
+        }
+      );
+    }
+  }, [expandedProject, reduceMotion]);
+
+  const allExperiences: ExperienceItem[] = DATA.work.map((item) => ({
       title: item.company,
       role: item.title,
-      period: `${item.start} — ${item.end ?? "Present"}`,
+      period:
+        "period" in item && typeof item.period === "string" && item.period
+          ? item.period
+          : "start" in item && typeof item.start === "string"
+            ? `${item.start} — ${"end" in item && typeof item.end === "string" ? item.end : "Present"}`
+            : "",
       description: item.description,
-      logoUrl: item.logoUrl,
-      href: item.href,
-      location: item.location,
-    })),
-    ...DATA.education.map((item) => ({
-      type: "education" as const,
-      title: item.school,
-      role: item.degree,
-      period: `${item.start} — ${item.end}`,
-      description:
-        "Comprehensive technical education focusing on full-stack software development, Linux server administration, computer networking, and cybersecurity practices.",
-      logoUrl: item.logoUrl,
-      href: item.href,
-      location: "Bogor, Indonesia",
-    })),
-  ];
+      logoUrl: "logoUrl" in item ? item.logoUrl : undefined,
+      href: "href" in item ? item.href : undefined,
+      location: "location" in item ? item.location : undefined,
+      division: "division" in item ? item.division : undefined,
+      status: "status" in item ? item.status : undefined,
+    }));
 
-  const skillCategories = [
+  const featuredProjectLinks = new Set(
+    FEATURED_PROJECTS.flatMap((project) =>
+      project.links.map((link) =>
+        link.href.replace(/^http:/, "https:").replace(/\/+$/, "").toLowerCase()
+      )
+    )
+  );
+  const projects: PortfolioProject[] = [
+    ...FEATURED_PROJECTS,
+    ...DATA.projects.filter(
+      (project) =>
+        !project.links.some((link) =>
+          featuredProjectLinks.has(
+            link.href.replace(/^http:/, "https:").replace(/\/+$/, "").toLowerCase()
+          )
+        )
+    ),
+  ];
+  const getProjectCategory = (project: PortfolioProject) =>
+    project.category ?? project.caseStudy?.category ?? "Web Applications";
+  const projectCategories = [
+    "All Projects",
+    ...Array.from(new Set(projects.map(getProjectCategory))),
+  ];
+  const visibleProjects =
+    activeProjectCategory === "All Projects"
+      ? projects
+      : projects.filter(
+          (project) => getProjectCategory(project) === activeProjectCategory
+        );
+
+  const skillsByCategory = [
     {
-      name: "Frontend Development",
-      icon: <Code2 className="w-5 h-5 text-blue-600" />,
-      description: "Building responsive, modern, and accessible user interfaces.",
+      name: "FRONTEND",
       skills: [
-        { name: "Next.js", level: "Advanced" },
-        { name: "React", level: "Advanced" },
-        { name: "TypeScript", level: "Proficient" },
-        { name: "Tailwind CSS", level: "Expert" },
-        { name: "HTML5 / CSS3", level: "Expert" },
-        { name: "JavaScript (ES6+)", level: "Advanced" },
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "Next.js",
+        "Tailwind CSS",
+        "shadcn/ui",
       ],
     },
     {
-      name: "Backend & APIs",
-      icon: <Server className="w-5 h-5 text-blue-600" />,
-      description: "Designing scalable server architectures, routing, and RESTful APIs.",
-      skills: [
-        { name: "Laravel (PHP)", level: "Advanced" },
-        { name: "PHP", level: "Advanced" },
-        { name: "RESTful APIs", level: "Advanced" },
-        { name: "Authentication (Sanctum/JWT)", level: "Proficient" },
-        { name: "MQTT Protocol", level: "Working Knowledge" },
-      ],
+      name: "BACKEND",
+      skills: ["Node.js", "Laravel", "PHP", "REST APIs"],
     },
     {
-      name: "Database Systems",
-      icon: <Database className="w-5 h-5 text-blue-600" />,
-      description: "Relational database schema modeling, queries, and migrations.",
-      skills: [
-        { name: "MySQL", level: "Advanced" },
-        { name: "PostgreSQL", level: "Proficient" },
-        { name: "Database Design", level: "Advanced" },
-      ],
+      name: "DATABASE",
+      skills: ["PostgreSQL", "MySQL", "Prisma"],
     },
     {
-      name: "Tools & DevOps",
-      icon: <Wrench className="w-5 h-5 text-blue-600" />,
-      description: "Version control, API debugging, and development workflow.",
-      skills: [
-        { name: "Git & GitHub", level: "Advanced" },
-        { name: "Postman", level: "Advanced" },
-        { name: "Linux / Ubuntu", level: "Proficient" },
-        { name: "VS Code", level: "Expert" },
-        { name: "Vercel Deployment", level: "Proficient" },
-      ],
-    },
-    {
-      name: "Networking & Security",
-      icon: <Shield className="w-5 h-5 text-blue-600" />,
-      description: "Network fundamentals, system hardening, and CTF challenges.",
-      skills: [
-        { name: "Computer Networking", level: "Proficient" },
-        { name: "Cyber Security Fundamentals", level: "Proficient" },
-        { name: "CTF (Capture The Flag)", level: "Practitioner" },
-        { name: "Linux CLI", level: "Advanced" },
-      ],
+      name: "TOOLS & DEPLOYMENT",
+      skills: ["Git", "GitHub", "Vercel", "Postman", "VS Code"],
     },
   ];
 
-  const featuredProject = DATA.projects[0];
-  const secondaryProjects = DATA.projects.slice(1);
+  const previewProjectIndex = expandedProject === null ? hoveredProject : null;
 
   const formatProjectDescription = (description: string) =>
-    description
-      .replace(/\s*\n\s*/g, " ")
-      .replace(/\s{2,}/g, " ")
-      .trim();
+    description.replace(/\s*\n\s*/g, " ").replace(/\s{2,}/g, " ").trim();
 
   return (
-    <div className="relative min-h-screen bg-white text-slate-900 selection:bg-blue-600 selection:text-white">
-      {/* Delicate background pattern */}
-      <div className="fixed inset-0 pointer-events-none -z-10 bg-subtle-grid opacity-60" />
-      <div className="fixed top-0 right-1/4 w-[500px] h-[500px] bg-blue-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed bottom-1/3 left-10 w-[450px] h-[450px] bg-sky-50/50 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="portfolio-page relative min-h-screen bg-white text-slate-900 selection:bg-blue-600 selection:text-white">
+      <NavbarLiquid />
 
-      {/* 01 — HERO SECTION */}
-      <section
-        id="hero"
-        className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden"
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Column: Typography & CTAs */}
+      {/* Background gradients */}
+      <div className="portfolio-backdrop fixed inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,_rgba(191,219,254,0.2),_transparent_40%),radial-gradient(circle_at_bottom_right,_rgba(219,234,254,0.3),_transparent_30%),linear-gradient(to_bottom,_#ffffff_0%,_#f8fbff_100%)]" />
+
+      <main className="overflow-x-hidden">
+        {/* HERO */}
+        <section id="hero" className="relative min-h-screen pt-40 pb-24 md:pt-48 md:pb-32">
+          <div className="max-w-7xl mx-auto px-6">
             <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="visible"
-              className="lg:col-span-7 flex flex-col items-start"
+              initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-end"
             >
-              {/* Eyebrow Status Badge */}
-              <motion.div
-                variants={fadeInUp}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50/80 border border-blue-200/60 text-blue-700 text-xs font-semibold uppercase tracking-wider mb-6"
-              >
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                <span>Available for Internship & Freelance</span>
-              </motion.div>
-
-              {/* Main Heading */}
-              <motion.div variants={fadeInUp} className="space-y-3 mb-6">
-                <p className="text-xs md:text-sm uppercase tracking-[0.25em] font-semibold text-blue-600">
+              <div>
+                <motion.p
+                  initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                  className="mb-8 text-xs font-semibold uppercase tracking-[0.4em] text-blue-600"
+                >
                   Frontend / Full-Stack Developer
-                </p>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-slate-900 leading-[1.08]">
-                  Hi, I&apos;m Rifky.
-                  <br />
-                  <span className="text-slate-900">
-                    I build digital experiences that{" "}
-                    <span className="text-blue-600">feel simple.</span>
-                  </span>
-                </h1>
-              </motion.div>
+                </motion.p>
 
-              {/* Subheading */}
-              <motion.p
-                variants={fadeInUp}
-                className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8"
-              >
-                I am a developer focused on building modern web applications using{" "}
-                <span className="text-slate-900 font-semibold">Next.js</span>,{" "}
-                <span className="text-slate-900 font-semibold">Laravel</span>, and other modern web technologies to deliver clean, fast, and intuitive interfaces.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                variants={fadeInUp}
-                className="flex flex-wrap items-center gap-3.5 mb-10 w-full sm:w-auto"
-              >
-                <a
-                  href="#projects"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-all shadow-sm hover:shadow group w-full sm:w-auto"
+                <motion.h1
+                  initial={reduceMotion ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+                  animate={reduceMotion ? { opacity: 1, clipPath: "inset(0 0 0 0)" } : { opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                  className="max-w-5xl text-[clamp(3rem,7.8vw,6.6rem)] font-black leading-[0.98] tracking-[-0.075em] text-slate-900"
                 >
-                  <span>View Selected Work</span>
-                  <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                </a>
+                  Practical Web Apps{" "}
+                  <span className="text-blue-600">for Real Work.</span>
+                </motion.h1>
 
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-medium text-sm hover:bg-slate-800 transition-all shadow-sm w-full sm:w-auto"
+                <motion.p
+                  initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                  className="mt-10 max-w-2xl text-lg md:text-xl text-slate-600 leading-relaxed"
                 >
-                  <span>Let&apos;s Talk</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                  I&apos;m Rifky Febrian Iskandar. I build useful web applications by connecting clear interfaces, backend workflows, and reliable data.
+                </motion.p>
 
-                <a
-                  href="/cv.pdf"
-                  download
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 font-medium text-sm transition-all w-full sm:w-auto"
+                <motion.div
+                  initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                  className="mt-12 flex flex-wrap items-center gap-4"
                 >
-                  <span>Download CV</span>
-                </a>
-              </motion.div>
-
-              {/* Social Links */}
-              <motion.div
-                variants={fadeInUp}
-                className="flex items-center gap-5 pt-4 border-t border-slate-100 w-full"
-              >
-                <span className="text-xs font-medium text-slate-600 uppercase tracking-wider">
-                  Connect:
-                </span>
-                <div className="flex items-center gap-3">
                   <a
-                    href={DATA.contact.social.GitHub.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                    aria-label="GitHub"
+                    href="#projects"
+                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-600 text-white font-semibold text-sm shadow-[0_12px_32px_rgba(37,99,235,0.25)] hover:shadow-[0_16px_48px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-1"
                   >
-                    <Github className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={DATA.contact.social.LinkedIn.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={DATA.contact.social.Instagram.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full text-slate-500 hover:text-pink-600 hover:bg-pink-50 transition-colors"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="w-4 h-4" />
+                    Explore Projects
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                   </a>
                   <a
                     href={`mailto:${DATA.contact.email}`}
-                    className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                    aria-label="Email"
+                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-slate-200 text-slate-800 font-semibold text-sm hover:border-blue-300 hover:bg-blue-50 transition-all duration-300"
                   >
-                    <Mail className="w-4 h-4" />
+                    Discuss a project
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                   </a>
-                </div>
-              </motion.div>
-            </motion.div>
+                  <a
+                    href="/cv.pdf"
+                    download
+                    className="group inline-flex items-center gap-2 px-3 py-3 text-slate-600 font-semibold text-sm hover:text-blue-600 transition-colors"
+                  >
+                    Download CV
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </a>
+                </motion.div>
 
-            {/* Right Column: Editorial Portrait */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:col-span-5 flex justify-center lg:justify-end"
-            >
+                <motion.div
+                  initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.8 }}
+                  className="mt-12 flex items-center gap-5"
+                >
+                  {[
+                    { href: DATA.contact.social.GitHub.url, icon: Github },
+                    { href: DATA.contact.social.LinkedIn.url, icon: Linkedin },
+                    { href: DATA.contact.social.Instagram.url, icon: Instagram },
+                    { href: `mailto:${DATA.contact.email}`, icon: Mail },
+                  ].map(({ href, icon: Icon }) => (
+                    <motion.a
+                      key={href}
+                      href={href}
+                      target={href.startsWith("http") ? "_blank" : undefined}
+                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      aria-label={
+                        href.startsWith("mailto:")
+                          ? "Email Rifky"
+                          : `Visit ${Icon.displayName ?? "social"} profile`
+                      }
+                      className="flex items-center justify-center w-11 h-11 rounded-full border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300"
+                      whileHover={reduceMotion ? undefined : { scale: 1.1, y: -2 }}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </motion.a>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Profile image */}
               <motion.div
-                animate={{ y: [0, -8, 0], rotate: [0, 1, 0, -1, 0] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="relative w-full max-w-[340px] sm:max-w-[380px]"
+                initial={reduceMotion ? false : { opacity: 0, scale: 1.1, y: 40 }}
+                animate={reduceMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="relative mx-auto w-full max-w-[22rem] lg:mx-0 lg:ml-auto"
               >
                 <motion.div
-                  animate={{ scale: [1, 1.08, 1], opacity: [0.4, 0.8, 0.4] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-0 translate-x-4 translate-y-4 rounded-3xl bg-gradient-to-br from-blue-200/70 via-cyan-200/50 to-violet-200/70 blur-2xl -z-10"
+                  animate={reduceMotion ? {} : { x: [0, 8, 0], y: [0, -8, 0] }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -right-8 top-8 w-40 h-40 bg-blue-200/50 rounded-full blur-3xl"
                 />
 
                 <motion.div
-                  whileHover={{ y: -8, scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.06)] aspect-[4/5] group"
+                  whileHover={reduceMotion ? undefined : { y: -6, scale: 1.01 }}
+                  className="relative overflow-hidden rounded-[2.5rem] border-2 border-slate-200 bg-slate-100 shadow-[0_40px_80px_rgba(15,23,42,0.12)]"
                 >
-                  <motion.div
-                    animate={{ scale: [1, 1.08, 1] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src="/guabanget.jpg"
-                      alt={DATA.name}
-                      fill
-                      priority
-                      className="object-cover object-center"
-                      sizes="(max-width: 768px) 100vw, 400px"
-                    />
-                  </motion.div>
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
-                  <motion.div
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                    className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent flex items-end p-5"
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/30 to-transparent z-10" />
+                  <Image
+                    src="/rifky.jpg"
+                    alt={DATA.name}
+                    width={500}
+                    height={650}
+                    priority
+                    sizes="(max-width: 1024px) 80vw, 35vw"
+                    className="w-full h-auto object-cover"
                   />
-
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white z-10">
-                    <div>
-                      <p className="text-sm font-semibold tracking-tight">
-                        {DATA.name}
-                      </p>
-                      <p className="text-xs text-slate-200 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-blue-400" />
-                        {DATA.location}, ID
-                      </p>
-                    </div>
-                    <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-medium border border-white/20">
-                      SIJA Specialist
-                    </span>
-                  </div>
                 </motion.div>
               </motion.div>
             </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 02 — ABOUT SECTION */}
-      <section
-        id="about"
-        className="py-24 md:py-32 border-t border-slate-100 bg-slate-50/50"
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-14"
-          >
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-blue-600">
-              01 / ABOUT
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 mt-2">
-              A little about me.
-            </h2>
-          </motion.div>
-
-          {/* 2-Column Editorial Grid */}
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-            {/* Left: Large Editorial Statement */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:col-span-6 space-y-6"
-            >
-              <div className="border-l-2 border-blue-600 pl-6">
-                <blockquote className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-snug">
-                  &ldquo;Computer science isn&apos;t just what I study — it&apos;s how I like to solve real-world problems.&rdquo;
-                </blockquote>
-              </div>
-
-              {/* Metadata Pills */}
-              <div className="flex flex-col gap-3 pt-4">
-                <div className="inline-flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-600 font-medium">Location</p>
-                    <p className="text-sm font-semibold text-slate-900">
-                      Based in Indonesia (Ciamis & Bogor)
-                    </p>
-                  </div>
-                </div>
-
-                <div className="inline-flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
-                    <Terminal className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-600 font-medium">Status & Education</p>
-                    <p className="text-sm font-semibold text-slate-900">
-                      Student Developer at SMK TI BAZMA (SIJA)
-                    </p>
-                  </div>
-                </div>
-
-                <div className="inline-flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <div className="w-8 h-8 rounded-xl bg-green-50 text-green-600 flex items-center justify-center font-bold text-xs">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-600 font-medium">Availability</p>
-                    <p className="text-sm font-semibold text-slate-900">
-                      Open for Internship, Junior Roles & Freelance
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right: Short Biography & Pillars */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-6 space-y-6 text-slate-600 leading-relaxed text-base"
-            >
-              <p>
-                I study <span className="font-semibold text-slate-900">Information Systems, Networking, and Applications (SIJA)</span> with a strong interest in full-stack web development, clean backend architecture, and system security.
-              </p>
-              <p>
-                My main focus is building modern web applications using <span className="font-semibold text-slate-900">Next.js</span> and <span className="font-semibold text-slate-900">Laravel</span>, starting from relational database design in MySQL, building RESTful APIs, and integrating communication protocols such as MQTT for IoT devices.
-              </p>
-              <p>
-                Besides web development, I also have a solid foundation in Linux system administration, basic computer networking concepts, and active problem-solving practice through Capture The Flag (CTF) competitions.
-              </p>
-
-              {/* Core Pillars / Badges */}
-              <div className="pt-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">
-                  Core Focus Areas
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "Full-Stack Web Engineering",
-                    "RESTful API Development",
-                    "Database Modeling",
-                    "Linux Administration",
-                    "Cyber Security Fundamentals",
-                    "Clean UI Architecture",
-                  ].map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-medium text-slate-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 03 — EXPERIENCE / JOURNEY SECTION */}
-      <section id="experience" className="py-24 md:py-32 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-blue-600">
-              02 / JOURNEY
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 mt-2">
-              Experience & Education
-            </h2>
-            <p className="text-slate-600 mt-3 max-w-xl text-base">
-              A chronological overview of leadership, regional organizations, and technical education.
-            </p>
-          </motion.div>
-
-          {/* Minimalist Vertical Timeline */}
-          <div className="relative pl-6 md:pl-10 border-l border-blue-200/80 space-y-10">
-            {allExperiences.map((exp, idx) => (
+        {/* ABOUT */}
+        <section id="about" className="relative py-32 md:py-48 border-t border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 items-start">
               <motion.div
-                key={`${exp.title}-${exp.period}-${idx}`}
-                initial={{ opacity: 0, x: -16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="relative group"
-              >
-                {/* Timeline Dot */}
-                <div className="absolute -left-[31px] md:-left-[47px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-blue-600 group-hover:bg-blue-600 group-hover:scale-125 transition-all duration-300" />
-
-                {/* Timeline Content */}
-                <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] group-hover:border-blue-300 group-hover:shadow-[0_4px_20px_rgba(37,99,235,0.06)] group-hover:translate-x-1.5 transition-all duration-300">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-3">
-                      {exp.logoUrl ? (
-                        <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-slate-100 bg-slate-50 flex-shrink-0">
-                          <Image
-                            src={exp.logoUrl}
-                            alt={exp.title}
-                            fill
-                            className="object-contain p-0.5"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                          {exp.title ? exp.title.charAt(0) : "•"}
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                          {exp.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm font-medium text-blue-600">
-                          {exp.role}
-                        </p>
-                      </div>
-                    </div>
-
-                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold tracking-tight w-fit">
-                      {exp.period}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-slate-600 leading-relaxed mt-3">
-                    {exp.description}
-                  </p>
-
-                  {exp.href && exp.href !== "#" && (
-                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-xs text-slate-600">
-                        {exp.location}
-                      </span>
-                      <a
-                        href={exp.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
-                      >
-                        <span>Learn more</span>
-                        <ArrowUpRight className="w-3 h-3" />
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 04 — SKILLS / TECH STACK SECTION */}
-      <section
-        id="skills"
-        className="py-24 md:py-32 border-t border-slate-100 bg-slate-50/50"
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-blue-600">
-              03 / CAPABILITIES
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 mt-2">
-              Skills & Technologies
-            </h2>
-            <p className="text-slate-600 mt-3 max-w-xl text-base">
-              A structured overview of the programming languages, frameworks, databases, and security tools I leverage.
-            </p>
-          </motion.div>
-
-          {/* Minimalist Bento / Categorized Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {skillCategories.map((category, idx) => (
-              <motion.div
-                key={category.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className={`p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:shadow-md transition-all duration-300 flex flex-col justify-between ${
-                  idx === 0 ? "md:col-span-2 lg:col-span-1" : ""
-                }`}
+                transition={{ duration: 0.7 }}
               >
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-100">
-                      {category.icon}
-                    </div>
-                    <h3 className="font-bold text-slate-900 text-base">
-                      {category.name}
-                    </h3>
-                  </div>
+                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600 mb-8">01 — About</p>
 
-                  <p className="text-xs text-slate-600 mb-5">
-                    {category.description}
-                  </p>
-                </div>
+                <motion.h2
+                  initial={reduceMotion ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+                  whileInView={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="text-4xl md:text-5xl font-black leading-[1] tracking-[-0.06em] text-slate-900"
+                >
+                  A LITTLE
+                </motion.h2>
 
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill.name}
-                      className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200/70 text-xs font-medium text-slate-800 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-colors"
+                <motion.h2
+                  initial={reduceMotion ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+                  whileInView={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                  className="text-5xl md:text-6xl font-black leading-[1] tracking-[-0.06em] text-blue-600 mt-2"
+                >
+                  ABOUT ME.
+                </motion.h2>
+              </motion.div>
+
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.15 }}
+                className="space-y-6 text-base md:text-lg leading-relaxed text-slate-600"
+              >
+                <p>
+                  My technical foundation comes from Software and Networking (SIJA) studies at SMK TI BAZMA and hands-on web application projects.
+                </p>
+
+                <p>
+                  I work across <span className="font-semibold text-slate-900">frontend engineering, backend development, and database integration</span>, building practical applications, workflow systems, and management dashboards.
+                </p>
+
+                <p>
+                  I&apos;m interested in solving practical problems with software, from thoughtful interfaces to operational tools and sensor-monitoring applications.
+                </p>
+
+                {/* Floating metadata */}
+                <div className="grid grid-cols-2 gap-3 pt-6">
+                  {[
+                    { label: "BASED IN", value: "Ciamis, Indonesia" },
+                    { label: "CURRENT", value: "Internship — Ongoing" },
+                  ].map(({ label, value }) => (
+                    <motion.div
+                      key={label}
+                      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5 }}
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200"
                     >
-                      {skill.name}
-                    </span>
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">{label}</p>
+                      <p className="mt-1.5 font-semibold text-slate-900">{value}</p>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 05 — SELECTED PROJECTS SECTION */}
-      <section id="projects" className="py-24 md:py-32 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-blue-600">
-              04 / SELECTED WORK
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 mt-2">
-              Selected Work
-            </h2>
-            <p className="text-slate-600 mt-3 max-w-2xl text-base">
-              A few things I&apos;ve built while learning, experimenting, and solving real problems with clean architecture.
-            </p>
-          </motion.div>
-
-          <div className="space-y-16">
-            {/* FEATURED PROJECT 01 (Large Showcase) */}
+        {/* EXPERIENCE */}
+        <section id="experience" className="relative border-t border-slate-200/60 bg-slate-50/40 py-28 md:py-36">
+          <div className="mx-auto max-w-7xl px-6">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="group relative rounded-3xl bg-slate-50/70 border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-500 p-6 md:p-10"
+              className="mb-14 md:mb-20"
             >
-              <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                {/* Project Media Mockup */}
-                <div className="lg:col-span-7">
-                  <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-lg aspect-[16/10] group-hover:scale-[1.02] transition-transform duration-300">
-                    <div className="h-7 bg-slate-800/90 px-4 flex items-center gap-1.5 border-b border-slate-700/60">
-                      <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                      <span className="text-[10px] text-slate-300 font-mono ml-2 truncate">
-                        {featuredProject.title === "BMPS Bogor" ? "bmps-bogor-zeta.vercel.app" : featuredProject.title}
-                      </span>
-                    </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600">02 — Experience</p>
+              <h2 className="mt-6 text-4xl font-black tracking-[-0.06em] text-slate-900 md:text-6xl">
+                Experience in practice.
+              </h2>
+            </motion.div>
 
-                    <div className="relative w-full h-[calc(100%-28px)]">
-                      <Image
-                        src={featuredProject.image}
-                        alt={featuredProject.title}
-                        fill
-                        className="object-cover object-top"
-                        sizes="(max-width: 768px) 100vw, 600px"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project Details */}
-                <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">
-                        01 / FEATURED PROJECT
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-semibold">
-                        {featuredProject.title === "BMPS Bogor" ? "Public Platform" : "IoT & Full-Stack"}
-                      </span>
-                    </div>
-
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
-                      {featuredProject.title}
-                    </h3>
-
-                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-4 whitespace-pre-line">
-                      {formatProjectDescription(featuredProject.description)}
-                    </p>
-                  </div>
-
-                  {/* Tech Stack Pills */}
-                  {featuredProject.technologies.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
-                        Technologies
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {featuredProject.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-medium text-slate-800"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+            <div className="relative space-y-4 border-l border-slate-200 pl-5 md:pl-8">
+              {allExperiences.map((exp, idx) => (
+                <motion.div
+                  key={`${exp.title}-${idx}`}
+                  initial={reduceMotion ? false : { opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.05 }}
+                  whileHover={reduceMotion ? undefined : { x: 6, backgroundColor: "rgba(191, 219, 254, 0.35)" }}
+                  className="group relative rounded-2xl border border-slate-200/60 bg-white/80 p-6 transition-colors duration-300 hover:border-blue-300 md:p-8"
+                >
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div className="flex min-w-0 flex-1 items-start gap-4">
+                      {exp.logoUrl && (
+                        <Image
+                          src={exp.logoUrl}
+                          alt=""
+                          width={44}
+                          height={44}
+                          className="mt-1 h-11 w-11 rounded-xl border border-slate-200 bg-white object-contain p-1.5"
+                        />
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold uppercase tracking-[0.3em] text-blue-600">{String(idx + 1).padStart(2, "0")}</p>
+                        <h3 className="mt-2 text-2xl font-black tracking-[-0.05em] text-slate-900 md:text-3xl">
+                          {exp.href ? (
+                            <a
+                              href={exp.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="rounded-sm outline-none transition-colors hover:text-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600"
+                            >
+                              {exp.title}
+                            </a>
+                          ) : (
+                            exp.title
+                          )}
+                        </h3>
+                        <p className="mt-1 text-sm font-semibold text-blue-600 md:text-base">{exp.role}</p>
+                        {exp.division && (
+                          <p className="mt-2 text-sm text-slate-600">Division: {exp.division}</p>
+                        )}
                       </div>
                     </div>
-                  )}
 
-                  {/* Action Links */}
-                  <div className="flex items-center gap-3 pt-2 flex-wrap">
-                    {featuredProject.links.map((link) => (
-                      <a
-                        key={link.type}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white font-medium text-xs hover:bg-blue-600 transition-colors shadow-xs group/btn"
-                      >
-                        {link.type === "Live Website" ? (
-                          <ArrowUpRight className="w-3.5 h-3.5" />
+                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                      {exp.period && (
+                        <span className="rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-slate-600">
+                          {exp.period}
+                        </span>
+                      )}
+                      {exp.status && (
+                        <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-800">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          {exp.status}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-sm leading-relaxed text-slate-600 md:text-base">{exp.description}</p>
+                  {exp.location && (
+                    <p className="mt-4 border-t border-slate-100 pt-4 text-xs uppercase tracking-[0.2em] text-slate-500">
+                      {exp.location}
+                    </p>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* EDUCATION */}
+        <section id="education" className="relative border-t border-slate-200/60 py-28 md:py-36">
+          <div className="mx-auto max-w-7xl px-6">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-14 md:mb-20"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600">03 — Education</p>
+              <h2 className="mt-6 text-4xl font-black tracking-[-0.06em] text-slate-900 md:text-6xl">
+                Education & technical foundations.
+              </h2>
+            </motion.div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {DATA.education.map((item, idx) => {
+                const period =
+                  "start" in item && typeof item.start === "string"
+                    ? `${item.start} — ${"end" in item && typeof item.end === "string" ? item.end : "Present"}`
+                    : undefined;
+                const degree = "degree" in item ? item.degree : undefined;
+                const logoUrl = "logoUrl" in item ? item.logoUrl : undefined;
+                const href = "href" in item ? item.href : undefined;
+
+                return (
+                  <motion.article
+                    key={item.school}
+                    initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: idx * 0.08 }}
+                    className="flex min-h-44 items-start gap-4 rounded-2xl border border-slate-200/70 bg-white/80 p-6 md:p-8"
+                  >
+                    {logoUrl && (
+                      <Image
+                        src={logoUrl}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 shrink-0 rounded-xl border border-slate-200 bg-white object-contain p-1.5"
+                      />
+                    )}
+                    <div className="min-w-0">
+                      {period && (
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">{period}</p>
+                      )}
+                      <h3 className="mt-2 text-xl font-black tracking-[-0.04em] text-slate-900 md:text-2xl">
+                        {href ? (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-sm outline-none transition-colors hover:text-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600"
+                          >
+                            {item.school}
+                          </a>
                         ) : (
-                          <Github className="w-3.5 h-3.5" />
+                          item.school
                         )}
-                        <span>{link.type}</span>
-                        <ArrowUpRight className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                      </a>
-                    ))}
+                      </h3>
+                      {degree && <p className="mt-2 text-sm leading-relaxed text-slate-600">{degree}</p>}
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* SELECTED WORK */}
+        <section
+          id="projects"
+          ref={projectSectionRef}
+          className="relative overflow-hidden py-32 md:py-48 border-t border-slate-200/60"
+        >
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-20"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600">04 — Featured Projects</p>
+              <h2 className="mt-6 text-4xl md:text-6xl font-black tracking-[-0.06em] text-slate-900">
+                Selected work, built for real workflows.
+              </h2>
+            </motion.div>
+
+            <div
+              className="-mx-1 mb-8 flex gap-2 overflow-x-auto px-1 py-1"
+              role="group"
+              aria-label="Filter projects by category"
+            >
+              {projectCategories.map((category) => (
+                <motion.button
+                  key={category}
+                  type="button"
+                  aria-pressed={activeProjectCategory === category}
+                  onClick={() => {
+                    setActiveProjectCategory(category);
+                    setExpandedProject(null);
+                    setHoveredProject(null);
+                  }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+                  className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
+                    activeProjectCategory === category
+                      ? "border-blue-700 bg-blue-700 text-white"
+                      : "border-slate-200 bg-white/80 text-slate-600 hover:border-blue-300 hover:text-blue-700"
+                  }`}
+                >
+                  {category}
+                </motion.button>
+              ))}
+            </div>
+
+            <div className="grid md:grid-cols-[0.9fr_1.1fr] md:gap-12 lg:gap-16">
+              <div className="relative z-10 space-y-3 md:pr-6">
+                {visibleProjects.map((project, idx) => {
+                  const isActive = hoveredProject === idx || expandedProject === idx;
+                  const isExpanded = expandedProject === idx;
+                  const caseStudy = project.caseStudy;
+                  const isComingSoon = project.status === "Coming Soon";
+                  const projectYear = caseStudy?.year || project.dates;
+
+                  return (
+                    <div key={project.title} className="relative">
+                      <motion.button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        aria-controls={isExpanded ? `case-study-${idx}` : undefined}
+                        aria-label={`${isExpanded ? "Close" : "View"} ${project.title} project details`}
+                        onMouseEnter={() => {
+                          if (!reduceMotion && expandedProject === null) {
+                            setHoveredProject(idx);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (expandedProject === null) {
+                            setHoveredProject((current) => (current === idx ? null : current));
+                          }
+                        }}
+                        onClick={() => {
+                          setExpandedProject((current) => (current === idx ? null : idx));
+                          setHoveredProject(null);
+
+                          if (expandedProject !== idx && projectSectionRef.current) {
+                            const row = document.getElementById(`project-row-${idx}`);
+                            if (row) {
+                              const rect = row.getBoundingClientRect();
+                              const sectionRect = projectSectionRef.current.getBoundingClientRect();
+                              const offset = rect.top - sectionRect.top - 100;
+                              if (offset > 0) {
+                                window.scrollTo({
+                                  top: window.scrollY + offset,
+                                  behavior: reduceMotion ? "auto" : "smooth",
+                                });
+                              }
+                            }
+                          }
+                        }}
+                        id={`project-row-${idx}`}
+                        initial={reduceMotion ? false : { opacity: 0, x: -16 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.45, delay: idx * 0.04 }}
+                        className={`group flex w-full items-center gap-4 rounded-2xl border px-4 py-4 text-left transition-all duration-300 md:px-5 ${
+                          isActive
+                            ? "border-blue-200 bg-blue-50/70 shadow-[0_12px_30px_rgba(37,99,235,0.08)]"
+                            : "border-transparent bg-transparent hover:border-slate-200 hover:bg-slate-50/70"
+                        }`}
+                        style={{
+                          boxShadow: isActive ? "0 12px 30px rgba(37,99,235,0.08)" : "none",
+                        }}
+                      >
+                        <span className="min-w-[3rem] text-xs font-bold uppercase tracking-[0.28em] text-blue-600">
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="block text-xl font-black tracking-[-0.04em] text-slate-900 transition-colors duration-200 group-hover:text-blue-600">
+                              {project.title}
+                              {isComingSoon && (
+                                <span className="ml-3 align-middle text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                  Coming Soon
+                                </span>
+                              )}
+                            </span>
+                            <ArrowUpRight className="h-4 w-4 text-slate-400 transition-all duration-200 group-hover:text-blue-600 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                          </div>
+                          <p className="mt-1 text-xs text-slate-500">
+                            {getProjectCategory(project)}
+                            {project.role ? ` · ${project.role}` : ""}
+                          </p>
+                        </div>
+                      </motion.button>
+
+                      {isExpanded && (
+                        <div
+                          id={`case-study-${idx}`}
+                          ref={(element) => {
+                            if (element) {
+                              caseStudyRefs.current[idx] = element;
+                            }
+                          }}
+                          role="region"
+                          aria-labelledby={`project-row-${idx}`}
+                          className="mt-3 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white/90 shadow-[0_18px_40px_rgba(15,23,42,0.06)]"
+                        >
+                          <div className="border-b border-slate-200 px-4 py-3 md:px-5">
+                            <div className="flex items-center justify-between gap-4">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
+                                {isComingSoon
+                                  ? "Coming Soon"
+                                  : getProjectCategory(project)}
+                              </span>
+                              {projectYear && (
+                                <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-blue-600">
+                                  {projectYear}
+                                </span>
+                              )}
+                            </div>
+                            {(project.projectType || project.role) && (
+                              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
+                                {project.projectType && (
+                                  <span>Type: {project.projectType}</span>
+                                )}
+                                {project.role && <span>Role: {project.role}</span>}
+                              </div>
+                            )}
+                          </div>
+
+                          {isComingSoon ? (
+                            <p className="p-5 text-sm leading-relaxed text-slate-600">
+                              Project details will be added when source code and approved assets are available.
+                            </p>
+                          ) : (
+                            <div className="space-y-6 p-4 md:p-6">
+                              {project.image ? (
+                                <div data-case-panel className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100">
+                                  <div data-case-image className="relative aspect-[16/10] overflow-hidden">
+                                    <Image
+                                      src={project.image}
+                                      alt={`${project.title} project screenshot`}
+                                      fill
+                                      sizes="(max-width: 768px) 100vw, 45vw"
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-xs text-slate-500">
+                                  No verified project screenshots are available in the current portfolio assets.
+                                </p>
+                              )}
+
+                              {caseStudy?.gallery?.map((image) => (
+                                <figure
+                                  key={image.src}
+                                  data-case-panel
+                                  className="overflow-hidden rounded-[1.2rem] border border-slate-200 bg-slate-100"
+                                >
+                                  <div className="relative aspect-[16/10]">
+                                    <Image
+                                      src={image.src}
+                                      alt={image.alt}
+                                      fill
+                                      sizes="(max-width: 768px) 100vw, 45vw"
+                                      className="object-cover"
+                                    />
+                                  </div>
+                                </figure>
+                              ))}
+
+                              <div data-case-panel className="space-y-3">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-blue-600">Project Overview</p>
+                                <h3 className="text-2xl font-black tracking-[-0.05em] text-slate-900 md:text-3xl">{project.title}</h3>
+                                <p className="text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy?.overview ?? project.description}</p>
+                              </div>
+
+                              <div data-case-panel className="grid gap-6 md:grid-cols-2">
+                                {caseStudy?.problemStatement && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Problem Statement</p>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.problemStatement}</p>
+                                  </div>
+                                )}
+                                {caseStudy?.proposedSolution && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Proposed Solution</p>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.proposedSolution}</p>
+                                  </div>
+                                )}
+                                {caseStudy?.role && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Role</p>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.role}</p>
+                                  </div>
+                                )}
+                                {caseStudy?.myRole && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">My Role</p>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.myRole}</p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {caseStudy?.developmentProcess && (
+                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Development Process</p>
+                                  <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.developmentProcess}</p>
+                                </div>
+                              )}
+
+                              <div data-case-panel className="space-y-4 rounded-[1.2rem] border border-slate-200 bg-white p-4 md:p-5">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Technology Stack</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {project.technologies.map((tech) => (
+                                    <span key={tech} className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1.5 text-[11px] font-medium text-slate-700">
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div data-case-panel className="grid gap-6 md:grid-cols-2">
+                                {caseStudy?.features && caseStudy.features.length > 0 && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Key Features</p>
+                                    <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">
+                                      {caseStudy.features.map((feature) => (
+                                        <li key={feature} className="flex gap-2">
+                                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
+                                          <span>{feature}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {caseStudy?.whatBuilt && caseStudy.whatBuilt.length > 0 && (
+                                  <div className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">What I Built</p>
+                                    <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600 md:text-base">
+                                      {caseStudy.whatBuilt.map((item) => (
+                                        <li key={item} className="flex gap-2">
+                                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
+                                          <span>{item}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+
+                              {caseStudy?.challenges && (
+                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Challenges</p>
+                                  <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">{caseStudy.challenges}</p>
+                                </div>
+                              )}
+
+                              {caseStudy?.details && caseStudy.details.length > 0 && (
+                                <div data-case-panel className="rounded-[1.2rem] border border-slate-200 bg-slate-50 p-4 md:p-5">
+                                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Project Details</p>
+                                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                                    {caseStudy.details.map((detail) => (
+                                      <div key={detail.label} className="rounded-xl border border-slate-200 bg-white p-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500">{detail.label}</p>
+                                        <p className="mt-2 text-sm font-medium text-slate-800">{detail.value}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              <div data-case-panel className="flex flex-wrap gap-3 pt-2">
+                                {project.links.map((link) => (
+                                  <a
+                                    key={link.type}
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-blue-600"
+                                  >
+                                    {link.type}
+                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="relative hidden min-h-[560px] md:block">
+                <div className="pointer-events-none sticky top-28 z-20 h-[540px] w-[min(38vw,540px)] max-w-full overflow-hidden">
+                  <div
+                    ref={previewRef}
+                    className="absolute left-0 top-0 h-full w-full rounded-[2rem] border border-slate-200 bg-white/80 opacity-0 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-md"
+                    style={{
+                      clipPath: "inset(9% 0% 9% 0% round 1.75rem)",
+                      transform: "translate3d(0,0,0) perspective(1200px)",
+                      transformStyle: "preserve-3d",
+                    }}
+                  >
+                    {previewProjectIndex !== null && (
+                      <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-slate-50">
+                      {visibleProjects[previewProjectIndex].image ? (
+                        <div className="relative aspect-[16/11] overflow-hidden">
+                          <Image
+                            src={visibleProjects[previewProjectIndex].image}
+                            alt={`${visibleProjects[previewProjectIndex].title} project preview`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 38vw"
+                            className="h-full w-full object-cover"
+                            priority={false}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex aspect-[16/11] items-end border-b border-slate-200 bg-slate-100 p-6">
+                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                            {visibleProjects[previewProjectIndex].status ?? "Project overview"}
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="space-y-4 p-6">
+                        <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-600">Preview</p>
+                        <h3 className="text-2xl font-black tracking-[-0.05em] text-slate-900">
+                          {visibleProjects[previewProjectIndex].title}
+                        </h3>
+                        <p className="text-sm leading-relaxed text-slate-600">
+                          {visibleProjects[previewProjectIndex].description
+                            ? formatProjectDescription(visibleProjects[previewProjectIndex].description)
+                            : "Project details will be added when source code and approved assets are available."}
+                        </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SKILLS */}
+        <section id="skills" className="relative py-32 md:py-48 border-t border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-20"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600">05 — Skills</p>
+              <h2 className="mt-6 text-4xl md:text-6xl font-black tracking-[-0.06em] text-slate-900">
+                Tools I rely on.
+              </h2>
             </motion.div>
 
-            {/* SECONDARY PROJECTS GRID (Alternating Editorial Cards) */}
-            <div className="grid md:grid-cols-3 gap-8">
-              {secondaryProjects.map((project, idx) => (
+            <div className="grid gap-10 sm:grid-cols-2 xl:grid-cols-5">
+              {skillsByCategory.map((category, catIdx) => (
                 <motion.div
-                  key={project.title}
-                  initial={{ opacity: 0, y: 24 }}
+                  key={category.name}
+                  initial={reduceMotion ? false : { opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="group flex flex-col rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300 transition-all duration-300"
+                  transition={{ duration: 0.6, delay: catIdx * 0.1 }}
                 >
-                  {/* Card Thumbnail */}
-                  <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden border-b border-slate-100">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
-                      sizes="(max-width: 768px) 100vw, 400px"
-                    />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11px] font-bold text-slate-800 shadow-xs border border-white/40">
-                      0{idx + 2}
-                    </div>
-                  </div>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-8">
+                    {category.name}
+                  </h3>
 
-                  {/* Card Body */}
-                  <div className="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between text-xs text-slate-600 mb-2">
-                        <span className="font-medium">{project.dates}</span>
-                        <span className="font-semibold text-blue-600">Project</span>
-                      </div>
-
-                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                        {project.title}
-                      </h3>
-
-                      <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed mt-3">
-                        {formatProjectDescription(project.description)}
-                      </p>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1">
-                        {project.technologies.slice(0, 3).map((t) => (
-                          <span
-                            key={t}
-                            className="px-2 py-0.5 rounded bg-slate-100 text-[11px] font-medium text-slate-700"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-
-                      {project.links[0] && (
-                        <a
-                          href={project.links[0].href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-full text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                          aria-label="View Project"
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
-                      )}
-                    </div>
+                  <div className="space-y-3">
+                    {category.skills.map((skill, skillIdx) => (
+                      <motion.div
+                        key={skill}
+                        initial={reduceMotion ? false : { opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: catIdx * 0.1 + skillIdx * 0.03 }}
+                        whileHover={
+                          reduceMotion ? undefined : { x: 6, color: "#2563EB" }
+                        }
+                        className="text-lg md:text-xl font-semibold text-slate-900 cursor-pointer relative pb-2 hover:text-blue-600 transition-colors"
+                      >
+                        {skill}
+                        <motion.span
+                          className="absolute bottom-0 left-0 h-0.5 bg-blue-600"
+                          initial={{ width: 0 }}
+                          whileHover={reduceMotion ? undefined : { width: "100%" }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </motion.div>
+                    ))}
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 06 — CONTACT SECTION */}
-      <section
-        id="contact"
-        className="py-28 md:py-36 border-t border-slate-100 bg-slate-50/70 relative overflow-hidden"
-      >
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-              05 / GET IN TOUCH
-            </span>
+        {/* CONTACT + FOOTER MERGED */}
+        <section id="contact" className="relative py-32 md:py-48 border-t border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Contact heading */}
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-16"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-600 mb-8">
+                06 — Contact
+              </p>
 
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Let&apos;s build something <br className="hidden sm:inline" />
-              <span className="text-blue-600">meaningful together.</span>
-            </h2>
+              {["LET'S BUILD", "SOMETHING", "MEANINGFUL."].map((line, idx) => (
+                <motion.h2
+                  key={line}
+                  initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: idx * 0.1 }}
+                  className="text-5xl md:text-7xl font-black leading-[1.1] tracking-[-0.06em] text-slate-900"
+                >
+                  {line}
+                </motion.h2>
+              ))}
+            </motion.div>
 
-            <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
-              I&apos;m open to internship opportunities, freelance projects, collaborations, and interesting technical discussions.
-            </p>
+            {/* Social & CTA */}
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="flex flex-col items-center gap-8"
+            >
+              <p className="max-w-2xl text-center text-lg md:text-xl text-slate-600 leading-relaxed">
+                I&rsquo;m open to internship opportunities, freelance projects, collaborations, and interesting technical discussions.
+              </p>
 
-            {/* Main Primary CTA */}
-            <div className="pt-4 flex justify-center">
-              <a
+              <motion.a
                 href={`mailto:${DATA.contact.email}`}
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-blue-600 text-white font-semibold text-base hover:bg-blue-700 transition-all shadow-md hover:shadow-lg hover:scale-[1.02] group"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-blue-600 text-white font-semibold text-base shadow-[0_16px_40px_rgba(37,99,235,0.3)] hover:shadow-[0_20px_60px_rgba(37,99,235,0.4)] transition-all"
+                whileHover={reduceMotion ? undefined : { scale: 1.05, y: -2 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
               >
-                <Mail className="w-5 h-5" />
-                <span>Let&apos;s Talk</span>
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
-            </div>
+                Let&rsquo;s Talk
+                <ArrowUpRight className="w-5 h-5" />
+              </motion.a>
 
-            {/* Direct Contact Cards */}
-            <div className="pt-12 grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
-              <a
-                href={`mailto:${DATA.contact.email}`}
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <p className="text-xs text-slate-600 font-medium">Email Me</p>
-                <p className="text-xs font-semibold text-slate-900 truncate mt-0.5">
-                  {DATA.contact.email}
-                </p>
-              </a>
-
-              <a
-                href={DATA.contact.social.LinkedIn.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2">
-                  <Linkedin className="w-4 h-4" />
-                </div>
-                <p className="text-xs text-slate-600 font-medium">LinkedIn</p>
-                <p className="text-xs font-semibold text-slate-900 truncate mt-0.5">
-                  rifkyfbrn07
-                </p>
-              </a>
-
-              <a
-                href={DATA.contact.social.GitHub.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center mb-2">
-                  <Github className="w-4 h-4" />
-                </div>
-                <p className="text-xs text-slate-600 font-medium">GitHub</p>
-                <p className="text-xs font-semibold text-slate-900 truncate mt-0.5">
-                  rifkyfbrn07
-                </p>
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-12 border-t border-slate-200 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Branding */}
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-xs">
-                {DATA.initials}
+              <div className="flex flex-wrap items-center justify-center gap-6 mt-6">
+                {[
+                  { label: "GitHub", href: DATA.contact.social.GitHub.url },
+                  { label: "LinkedIn", href: DATA.contact.social.LinkedIn.url },
+                  { label: "Instagram", href: DATA.contact.social.Instagram.url },
+                  { label: "X", href: DATA.contact.social.X.url },
+                  { label: "Email", href: `mailto:${DATA.contact.email}` },
+                ].map(({ label, href }) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors relative pb-1"
+                    whileHover={
+                      reduceMotion ? undefined : { color: "#2563EB" }
+                    }
+                  >
+                    {label}
+                    <motion.span
+                      className="absolute bottom-0 left-0 h-0.5 bg-blue-600"
+                      initial={{ width: 0 }}
+                      whileHover={reduceMotion ? undefined : { width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.a>
+                ))}
               </div>
-              <div>
-                <p className="text-sm font-bold text-slate-900">
-                  {DATA.name}
-                </p>
-                <p className="text-xs text-slate-600">
-                  Frontend / Full-Stack Developer
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Navigation */}
-            <nav className="flex flex-wrap items-center justify-center gap-6 text-xs font-medium text-slate-600">
-              <a href="#about" className="hover:text-blue-600 transition-colors">
-                About
-              </a>
-              <a href="#experience" className="hover:text-blue-600 transition-colors">
-                Experience
-              </a>
-              <a href="#skills" className="hover:text-blue-600 transition-colors">
-                Skills
-              </a>
-              <a href="#projects" className="hover:text-blue-600 transition-colors">
-                Projects
-              </a>
-              <a href="#contact" className="hover:text-blue-600 transition-colors">
-                Contact
-              </a>
-            </nav>
-
-            {/* Back to top & Copyright */}
-            <div className="flex items-center gap-4 text-xs text-slate-600">
-              <span>© 2026 Rifky Febrian</span>
-              <a
-                href="#hero"
-                className="hover:text-blue-600 font-semibold transition-colors flex items-center gap-1"
-              >
-                <span>Back to top</span>
-                <span>↑</span>
-              </a>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-slate-800 bg-slate-950 text-white">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative overflow-hidden py-20 md:py-28"
+        >
+          <div className="max-w-6xl mx-auto px-6">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-center text-white"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70 mb-6">
+                Ready to build
+              </p>
+
+              <h3 className="text-4xl md:text-6xl font-black leading-[1.1] tracking-[-0.06em]">
+                Let&rsquo;s make something meaningful.
+              </h3>
+
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="mt-10 flex flex-wrap items-center justify-center gap-4"
+              >
+                {[
+                  { label: "GitHub", href: DATA.contact.social.GitHub.url },
+                  { label: "LinkedIn", href: DATA.contact.social.LinkedIn.url },
+                  { label: "Instagram", href: DATA.contact.social.Instagram.url },
+                  { label: "X", href: DATA.contact.social.X.url },
+                  { label: "Email", href: `mailto:${DATA.contact.email}` },
+                ].map(({ label, href }) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="px-4 py-2 rounded-full border border-white/30 text-white font-semibold text-sm hover:border-white/60 hover:bg-white/10 transition-all"
+                    whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+                  >
+                    {label}
+                  </motion.a>
+                ))}
+              </motion.div>
+
+              {/* Footer bottom info */}
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="mt-16 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-white/80"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/15 font-bold">
+                    {DATA.initials}
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-white">{DATA.name}</p>
+                    <p className="text-xs text-white/60">Full-Stack Developer</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-xs uppercase tracking-[0.15em] md:gap-x-6">
+                  {[
+                    { label: "About", href: "#about" },
+                    { label: "Experience", href: "#experience" },
+                    { label: "Education", href: "#education" },
+                    { label: "Projects", href: "#projects" },
+                    { label: "Skills", href: "#skills" },
+                    { label: "Contact", href: "#contact" },
+                  ].map(({ label, href }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      className="hover:text-white transition-colors"
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+
+        </motion.div>
       </footer>
     </div>
   );

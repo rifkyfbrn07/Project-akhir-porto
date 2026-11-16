@@ -16,7 +16,7 @@ export default function ProfilePhoto({
   src,
   alt,
   name = "Rifky Febrian",
-  title = "Frontend Developer",
+  title = "Backend Developer",
 }: ProfilePhotoProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -101,6 +101,7 @@ export default function ProfilePhoto({
             fill
             className="object-cover object-center"
             priority
+            sizes="(max-width: 768px) 100vw, 480px"
           />
 
           {/* Neumorphic Status Badge */}

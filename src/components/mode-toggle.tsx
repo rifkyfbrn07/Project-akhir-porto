@@ -1,22 +1,33 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export function ModeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <Button
-      variant="ghost"
+    <button
       type="button"
-      size="icon"
-      className="px-2"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      aria-pressed={mounted ? isDark : undefined}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-100 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-blue-300"
     >
-      <SunIcon className="h-[1.2rem] w-[1.2rem] text-neutral-800 dark:hidden dark:text-neutral-200" />
-      <MoonIcon className="hidden h-[1.2rem] w-[1.2rem] text-neutral-800 dark:block dark:text-neutral-200" />
-    </Button>
+      {isDark ? (
+        <Sun className="h-4 w-4" aria-hidden="true" />
+      ) : (
+        <Moon className="h-4 w-4" aria-hidden="true" />
+      )}
+    </button>
   );
 }

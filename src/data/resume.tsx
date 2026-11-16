@@ -1,20 +1,20 @@
 import { Icons } from "@/components/icons";
-import { ArrowUpRight, HomeIcon, NotebookIcon } from "lucide-react";
+import { HomeIcon, NotebookIcon } from "lucide-react";
 
 export const DATA = {
   name: "Rifky Febrian Iskandar",
   initials: "RF",
-  url: "https://rifky-portfolio.vercel.app",
+  url: "https://rifkyfbrn07-porto.vercel.app",
   location: "Ciamis",
   locationLink: "https://www.google.com/maps/place/Ciamis",
   description:
-    "Full-Stack Web Developer | Networking & Cyber Security Enthusiast",
+    "Developer building practical web applications, workflow systems, and operational dashboards.",
   summary: `
-I am a student specializing in Information Systems, Networking, and Applications (SIJA) with a strong focus on backend development and system security.
+I build practical web applications, workflow systems, and operational dashboards, drawing on a technical background in Information Systems, Networking, and Applications (SIJA).
 
-I build full-stack web applications using Laravel and Next.js, including REST API development, authentication systems, and database management using MySQL.
+My work spans frontend and backend development, API integration, and database-backed application workflows.
 
-I also have experience in networking and cyber security fundamentals, including Linux usage and basic Capture The Flag (CTF) challenges.
+I am interested in software that helps people manage real work, from clear interfaces to reliable operational systems.
 `,
 
   avatarUrl: "/sindoro.jpg",
@@ -73,6 +73,17 @@ I also have experience in networking and cyber security fundamentals, including 
 
   work: [
     {
+      company: "PT Pertamina Nusantara Regas",
+      badges: [],
+      title: "Praktik Kerja Lapangan (PKL)",
+      division: "Distribusi Gas dan Monitoring ORF",
+      start: "September 2026",
+      end: "Present",
+      status: "Ongoing",
+      description:
+        "Undertaking an internship in the Gas Distribution and ORF Monitoring Division, supporting operational activities and the development of digital solutions for operational workflows and monitoring.",
+    },
+    {
       company: "FOSJABAR j5 & j6",
       href: "https://sites.google.com/view/fosjabar/",
       badges: [],
@@ -91,8 +102,8 @@ I also have experience in networking and cyber security fundamentals, including 
       location: "Remote",
       title: "Division Head",
       logoUrl: "/osis.png",
-      start: "Spetember 2024",
-      end: "Februari 2025",
+      start: "September 2024",
+      end: "February 2025",
       description:
         "Led a division in the student council (OSIS), responsible for planning and executing school events. Managed team coordination, delegated tasks, and ensured smooth event execution, improving leadership and organizational skills.",
     },
@@ -103,10 +114,10 @@ I also have experience in networking and cyber security fundamentals, including 
       location: "Remote",
       title: "Member",
       logoUrl: "/osis.png",
-      start: "Spetember 2023",
+      start: "September 2023",
       end: "August 2024",
       description:
-        "Led a division in the student council (OSIS), responsible for planning and executing school events. Managed team coordination, delegated tasks, and ensured smooth event execution, improving leadership and organizational skills.",
+        "Participated in student council activities, supporting school events and collaborative initiatives while developing teamwork and organizational skills.",
     },
     {
       company: "Raimuna  Cabang Kabupaten Bogor 2024",
@@ -242,69 +253,17 @@ I also have experience in networking and cyber security fundamentals, including 
       degree: "Software & Networking (SIJA)",
       logoUrl: "/bazma.png",
       start: "2023",
-      end: "Now",
+      end: "2026",
+    },
+    {
+      school: "MTs Negeri 15 Ciamis",
+      logoUrl: "/mts.png",
+      degree: "Kelas Olahraga",
+      start: "2020",
+      end: "2023",
     },
   ],
   projects: [
-    {
-      title: "BMPS Bogor",
-      href: "https://bmps-bogor-zeta.vercel.app/",
-      dates: "August 2026",
-      active: true,
-      description: `
-Digital platform for BMPS Daerah Bogor.
-
-The website provides information and services for the organization, including programs, news, training, education assistance, scholarship information, school and foundation directory, and school and foundation registration.
-`,
-      technologies: [
-        "Next.js",
-        "TypeScript",
-        "React",
-        "Tailwind CSS",
-        "Prisma",
-        "PostgreSQL",
-      ],
-      links: [
-        {
-          type: "Live Website",
-          href: "https://bmps-bogor-zeta.vercel.app/",
-          icon: <ArrowUpRight className="size-3" />,
-        },
-        {
-          type: "GitHub",
-          href: "https://github.com/rifkyfbrn07/BMPS-bogor",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/bmps-bogor.png",
-      video: "",
-    },
-    {
-      title: "Wedding Web",
-      href: "https://github.com/rifkyfbrn07/wedding_web",
-      dates: "July 2026",
-      active: true,
-      description: `
-Wedding website project developed as a personal invitation and showcase page for a wedding event.
-`,
-      technologies: [
-        "Laravel",
-        "PHP",
-        "Vite",
-        "Tailwind CSS",
-        "Alpine.js",
-        "GSAP",
-      ],
-      links: [
-        {
-          type: "GitHub",
-          href: "https://github.com/rifkyfbrn07/wedding_web",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/wedding-web.png",
-      video: "",
-    },
     {
       title: "Portofolio",
       href: "https://rifkyfbrn07-porto.vercel.app/",
@@ -326,6 +285,33 @@ Highlights:
 - Built reusable component architecture
 - Focused on performance and clean UI/UX
 `,
+      caseStudy: {
+        category: "Portfolio Website",
+        year: "2025",
+        role: "Independent portfolio build and UI system implementation.",
+        overview:
+          "This portfolio was designed as a premium editorial presentation of my work, profile, and selected projects, with a focus on strong typography, responsive structure, and interactive project discovery.",
+        myRole:
+          "I designed and implemented the portfolio experience, including the landing page, project showcase, motion patterns, and reusable UI structure to present my work clearly and professionally.",
+        features: [
+          "Editorial homepage and narrative layout",
+          "Selected work showcase and project index",
+          "Hover-driven preview interactions",
+          "Smooth motion and responsive sections",
+          "Reusable UI and component architecture",
+        ],
+        whatBuilt: [
+          "Portfolio landing page and content sections",
+          "Project discovery interactions with hover and detail expansion",
+          "Styled component system for typography, cards, and layout",
+          "Responsive presentation optimized for desktop and mobile reading",
+        ],
+        details: [
+          { label: "Year", value: "2025" },
+          { label: "Category", value: "Personal Portfolio" },
+          { label: "Stack", value: "Next.js, TypeScript, Tailwind CSS, Magic UI" },
+        ],
+      },
       technologies: [
         "Next.js",
         "Typescript",
@@ -336,97 +322,11 @@ Highlights:
         {
           type: "Source",
           href: "https://github.com/rifkyfbrn07/Project-akhir-porto",
-          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "/portofolio.png",
       video:
         "",
-    },
-    {
-      title: "IoT Monitoring Dashboard",
-      href: "https://github.com/rifkyfbrn07/sensor-app",
-      dates: "April 2026",
-      active: true,
-      description: `
-IoT Monitoring Dashboard
-
-Tech Stack: Laravel 12, MySQL, MQTT, Tailwind CSS, JavaScript, Next.js
-
-Features:
-
-Real-time monitoring of various sensor types
-
-Full CRUD system for device management
-
-MQTT protocol integration for live data streams
-
-Status tracking and search functionality
-
-Highlights:
-
-Built a scalable backend for IoT data handling
-
-Implemented clean and intuitive admin dashboard UI
-
-Laravel MySQL MQTT PHP
-
-`,
-      technologies: [
-        "Tailwind CSS",
-        "JavaScript",
-        "Next.js",
-        "Laravel 12",
-        "MySQL",
-        "MQTT",
-
-
-      ],
-      links: [
-        {
-          type: "Source",
-          href: "https://github.com/rifkyfbrn07/sensor-app",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/sensor.png",
-      video: "",
-    },
-    {
-      title: "mini-ecom",
-      href: "http://github.com/rifkyfbrn07/mini-ecom",
-      dates: "September 2025",
-      active: true,
-      description: `
-E-Commerce Web Application
-
-Tech Stack:
-Laravel, MySQL, Blade
-
-Features:
-- User authentication & role-based access
-- Product management system (CRUD)
-- Order & transaction handling
-- REST API for frontend integration
-
-Highlights:
-- Designed relational database schema
-- Implemented secure authentication flow
-`,
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "TailwindCSS",
-      ],
-      links: [
-        {
-          type: "Source",
-          href: "http://github.com/rifkyfbrn07/mini-ecom",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/mini-ecom.png",
-      video: "",
     },
     {
       title: "Weather app",
@@ -458,7 +358,6 @@ Highlights:
         {
           type: "Source",
           href: "https://github.com/rifkyfbrn07/cuaca",
-          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "/weather.png",

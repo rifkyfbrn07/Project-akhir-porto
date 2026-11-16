@@ -1,5 +1,6 @@
 import { getBlogPosts, getPost } from "@/data/blog";
 import { DATA } from "@/data/resume";
+import BlogHeader from "@/components/blog-header";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -65,7 +66,8 @@ export default async function Blog({
   }
 
   return (
-    <section id="blog">
+    <main id="blog" className="mx-auto max-w-3xl px-6 py-24">
+      <BlogHeader />
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -102,6 +104,6 @@ export default async function Blog({
         className="prose dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: post.source }}
       ></article>
-    </section>
+    </main>
   );
 }
