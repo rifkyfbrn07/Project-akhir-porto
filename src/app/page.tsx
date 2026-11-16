@@ -861,76 +861,75 @@ export default function Page() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-800 bg-slate-950 text-white">
+      <footer className="portfolio-footer">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative overflow-hidden py-20 md:py-28"
+          className="portfolio-footer-inner"
         >
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="portfolio-footer-wrap">
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-center text-white"
+              className="portfolio-footer-main"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70 mb-6">
-                Ready to build
-              </p>
+              <div className="portfolio-footer-heading">
+                <p className="portfolio-footer-kicker">
+                  <span className="portfolio-footer-mark" aria-hidden="true" />
+                  A GOOD PLACE TO START
+                </p>
+                <h3>Let&rsquo;s make something meaningful.</h3>
+                <p className="portfolio-footer-invite">
+                  Have a project, opportunity, or idea in mind? I&rsquo;d be glad to hear about it.
+                </p>
+                <motion.a
+                  href={`mailto:${DATA.contact.email}`}
+                  className="portfolio-footer-cta"
+                  whileHover={reduceMotion ? undefined : { y: -2 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                >
+                  Let&rsquo;s talk <ArrowUpRight aria-hidden="true" />
+                </motion.a>
+              </div>
 
-              <h3 className="text-4xl md:text-6xl font-black leading-[1.1] tracking-[-0.06em]">
-                Let&rsquo;s make something meaningful.
-              </h3>
+              <div className="portfolio-footer-contact">
+                <p className="portfolio-footer-label">CONTACT</p>
+                <a href={`mailto:${DATA.contact.email}`}>{DATA.contact.email}</a>
+                <a href={`tel:${DATA.contact.tel.replace(/[^+\d]/g, "")}`}>{DATA.contact.tel}</a>
+              </div>
 
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="mt-10 flex flex-wrap items-center justify-center gap-4"
-              >
+              <div className="portfolio-footer-socials" role="group" aria-label="Social links">
                 {[
-                  { label: "GitHub", href: DATA.contact.social.GitHub.url },
-                  { label: "LinkedIn", href: DATA.contact.social.LinkedIn.url },
-                  { label: "Instagram", href: DATA.contact.social.Instagram.url },
-                  { label: "X", href: DATA.contact.social.X.url },
-                  { label: "Email", href: `mailto:${DATA.contact.email}` },
-                ].map(({ label, href }) => (
-                  <motion.a
-                    key={label}
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="px-4 py-2 rounded-full border border-white/30 text-white font-semibold text-sm hover:border-white/60 hover:bg-white/10 transition-all"
-                    whileHover={reduceMotion ? undefined : { scale: 1.05 }}
-                  >
-                    {label}
-                  </motion.a>
+                  { label: "GitHub", href: DATA.contact.social.GitHub.url, Icon: Github },
+                  { label: "LinkedIn", href: DATA.contact.social.LinkedIn.url, Icon: Linkedin },
+                  { label: "Instagram", href: DATA.contact.social.Instagram.url, Icon: Instagram },
+                  { label: "X", href: DATA.contact.social.X.url, Icon: null },
+                ].map(({ label, href, Icon }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                    {Icon ? <Icon aria-hidden="true" /> : <span aria-hidden="true" className="portfolio-footer-x">𝕏</span>}
+                    <span className="portfolio-footer-social-name">{label}</span>
+                  </a>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Footer bottom info */}
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                className="mt-16 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-white/80"
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="portfolio-footer-bottom"
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/15 font-bold">
-                    {DATA.initials}
-                  </div>
-                  <div className="text-left">
-                    <p className="font-semibold text-white">{DATA.name}</p>
-                    <p className="text-xs text-white/60">Full-Stack Developer</p>
-                  </div>
+                <div className="portfolio-footer-brand">
+                  <span className="portfolio-footer-monogram">{DATA.initials}</span>
+                  <span><strong>{DATA.name}</strong><small>Full-Stack Developer</small></span>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-xs uppercase tracking-[0.15em] md:gap-x-6">
+                <nav className="portfolio-footer-nav" aria-label="Footer navigation">
                   {[
                     { label: "About", href: "#about" },
                     { label: "Experience", href: "#experience" },
@@ -938,16 +937,10 @@ export default function Page() {
                     { label: "Projects", href: "#projects" },
                     { label: "Skills", href: "#skills" },
                     { label: "Contact", href: "#contact" },
-                  ].map(({ label, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      className="hover:text-white transition-colors"
-                    >
-                      {label}
-                    </a>
-                  ))}
-                </div>
+                  ].map(({ label, href }) => <a key={label} href={href}>{label}</a>)}
+                </nav>
+
+                <p className="portfolio-footer-copyright">© {new Date().getFullYear()} {DATA.name}</p>
               </motion.div>
             </motion.div>
           </div>
