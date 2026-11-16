@@ -298,6 +298,7 @@ export default function Page() {
                   <Image
                     src="/rifky.jpg"
                     alt={DATA.name}
+                    data-critical-image
                     width={500}
                     height={650}
                     priority
@@ -410,8 +411,8 @@ export default function Page() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.05 }}
-                  whileHover={reduceMotion ? undefined : { x: 6, backgroundColor: "rgba(191, 219, 254, 0.35)" }}
-                  className="group relative rounded-2xl border border-slate-200/60 bg-white/80 p-6 transition-colors duration-300 hover:border-blue-300 md:p-8"
+                  whileHover={reduceMotion ? undefined : { x: 6 }}
+                  className="experience-card group relative rounded-2xl border border-slate-200/60 bg-white/80 p-6 transition-colors duration-300 hover:border-blue-300 md:p-8"
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="flex min-w-0 flex-1 items-start gap-4">
